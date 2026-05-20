@@ -19,8 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -30,20 +28,10 @@ jobs:
       - name: Build
         run: npm ci && npm run build:pages
 
-      - name: Publicar em main/docs
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: main
-          publish_dir: ./dist
-          destination_dir: docs
-          keep_files: true
-          commit_message: "MVP_0: atualiza docs/ para GitHub Pages"
-
-      - name: Publicar em gh-pages
+      - name: Publicar na branch gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           force_orphan: true
-          commit_message: "MVP_0: atualiza gh-pages"
+          commit_message: "MVP_0: deploy ${{ github.sha }}"
