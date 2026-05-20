@@ -3,6 +3,7 @@ import { BrandTitle } from "./BrandTitle";
 import { InstagramButton } from "./InstagramButton";
 import { Logo } from "./Logo";
 import { WhatsAppButton } from "./WhatsAppButton";
+import { TattooMachineIcon } from "./icons/TattooMachineIcon";
 
 export function Hero() {
   const taglinePrimaryRef = useFitOneLine<HTMLParagraphElement>({ minPx: 7, maxPx: 18 });
@@ -30,18 +31,16 @@ export function Hero() {
           </div>
 
           <div className="hero__actions">
-            <InstagramButton className="hero__cta btn-instagram--compact">
+            <InstagramButton className="hero__cta hero__cta--instagram btn-instagram--compact">
               <span className="hero__cta-label hero__cta-label--long">Chamar no Instagram</span>
               <span className="hero__cta-label hero__cta-label--short">Instagram</span>
             </InstagramButton>
-            <WhatsAppButton className="hero__cta">
-              <span className="hero__cta-label hero__cta-label--long">WhatsApp</span>
-              <span className="hero__cta-label hero__cta-label--short" aria-hidden>
-                WA
-              </span>
+            <WhatsAppButton className="hero__cta hero__cta--whatsapp">
+              WHATSAPP
             </WhatsAppButton>
-            <a href="#portfolio" className="btn hero__cta hero__cta--cutout">
-              <span className="hero__cta-cutout">Ver trabalhos</span>
+            <a href="#portfolio" className="btn hero__cta hero__cta--portfolio">
+              <TattooMachineIcon className="hero__cta-portfolio-icon shrink-0" />
+              <span className="hero__cta-portfolio">Portfólio</span>
             </a>
           </div>
         </div>

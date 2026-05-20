@@ -3,10 +3,16 @@ import { useLayoutEffect, useRef } from "react";
 type Options = {
   minPx?: number;
   maxPx?: number;
+  /** Seletor de irmão no mesmo pai cuja largura (+ gap) é descontada do espaço útil. */
+  reserveSibling?: string;
 };
 
 /** Reduz a fonte até o texto caber em uma linha na largura do pai. */
-export function useFitOneLine<T extends HTMLElement>({ minPx = 7, maxPx = 18 }: Options = {}) {
+export function useFitOneLine<T extends HTMLElement>({
+  minPx = 7,
+  maxPx = 18,
+  reserveSibling,
+}: Options = {}) {
   const ref = useRef<T>(null);
 
   useLayoutEffect(() => {
@@ -15,14 +21,30 @@ export function useFitOneLine<T extends HTMLElement>({ minPx = 7, maxPx = 18 }: 
     if (!el || !box) return;
 
     const fit = () => {
-      const maxW = box.clientWidth;
+      let reserve = 0;
+      if (reserveSibling) {
+        const sib = box.querySelector<HTMLElement>(reserveSibling);
+        if (sib) {
+          reserve += sib.getBoundingClientRect().width;
+          const gap = parseFloat(getComputedStyle(box).columnGap || getComputedStyle(box).gap) || 0;
+          reserve += gap;
+        }
+      }
+      const maxW = box.clientWidth - reserve;
       if (maxW <= 0) return;
 
       let lo = minPx;
       let hi = maxPx;
       el.style.fontSize = `${hi}px`;
 
-      if (el.scrollWidth <= maxW) return;
+      const syncSizeVar = (px: number) => {
+        box.style.setProperty("--fit-one-line-size", `${px}px`);
+      };
+
+      if (el.scrollWidth <= maxW) {
+        syncSizeVar(hi);
+        return;
+      }
 
       while (hi - lo > 0.5) {
         const mid = (lo + hi) / 2;
@@ -32,6 +54,7 @@ export function useFitOneLine<T extends HTMLElement>({ minPx = 7, maxPx = 18 }: 
       }
 
       el.style.fontSize = `${lo}px`;
+      syncSizeVar(lo);
     };
 
     fit();
@@ -43,7 +66,7 @@ export function useFitOneLine<T extends HTMLElement>({ minPx = 7, maxPx = 18 }: 
       ro.disconnect();
       window.removeEventListener("resize", fit);
     };
-  }, [minPx, maxPx]);
+  }, [minPx, maxPx, reserveSibling]);
 
   return ref;
 }

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useFitOneLine } from "../hooks/useFitOneLine";
 import { CATEGORIES, PORTFOLIO_GALLERY } from "../data/site";
+import { TattooMachineIcon } from "./icons/TattooMachineIcon";
 import { PortfolioCarouselCell } from "./PortfolioCarouselCell";
 import { SectionHeading } from "./SectionHeading";
 
@@ -29,14 +30,17 @@ export function Portfolio() {
     <section id="portfolio" className="section-panel py-16 md:py-20 section-enter">
       <div className="mx-auto max-w-6xl">
         <div className="portfolio-intro px-5">
-          <SectionHeading
-            ref={portfolioTitleRef}
-            line1="Amostra"
-            line2="Portfólio"
-            layout="inline"
-            nowrap
-            className="portfolio-intro__title"
-          />
+          <div className="portfolio-intro__title-wrap">
+            <SectionHeading
+              ref={portfolioTitleRef}
+              line1="Amostra"
+              line2="Portfólio"
+              layout="inline"
+              nowrap
+              className="portfolio-intro__title"
+            />
+            <TattooMachineIcon className="portfolio-intro__icon shrink-0" />
+          </div>
 
           <section className="portfolio-filters" role="tablist" aria-label="Filtrar por estilo">
             {filterOrder.map((style) => (

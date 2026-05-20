@@ -53,6 +53,7 @@ export function SocialFloats() {
         aria-hidden={!visible}
         tabIndex={visible ? 0 : -1}
       >
+        <span className="social-float__pulse" aria-hidden="true" />
         <InstagramIcon className="social-float__icon" />
         <span className="social-float__label hidden sm:inline">Instagram</span>
       </a>
@@ -71,6 +72,7 @@ export function SocialFloats() {
         aria-hidden={!visible}
         tabIndex={visible ? 0 : -1}
       >
+        <span className="social-float__pulse" aria-hidden="true" />
         <WhatsAppIcon className="social-float__icon" />
         <span className="social-float__label hidden sm:inline">WhatsApp</span>
       </a>

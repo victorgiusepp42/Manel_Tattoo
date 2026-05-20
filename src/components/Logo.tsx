@@ -6,7 +6,7 @@ import { cn } from "../lib/cn";
 const heights = {
   nav: "h-[3.25rem] w-auto max-w-[92px] sm:h-[3.75rem] sm:max-w-[104px]",
   footer: "h-[7.5rem] w-auto max-w-[180px]",
-  hero: "h-[18rem] w-auto max-w-[min(92vw,520px)] sm:h-[22rem] md:h-[28rem] md:max-w-[640px]",
+  hero: "h-[min(18rem,52vw)] w-auto max-w-[min(92vw,480px)] sm:h-[min(22rem,46vw)] md:h-[min(26rem,38vw)] md:max-w-[580px]",
 } as const;
 
 type LogoSize = keyof typeof heights;
