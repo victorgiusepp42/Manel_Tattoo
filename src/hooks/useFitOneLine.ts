@@ -1,10 +1,12 @@
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef, type RefObject } from "react";
 
 type Options = {
   minPx?: number;
   maxPx?: number;
   /** Seletor de irmão no mesmo pai cuja largura (+ gap) é descontada do espaço útil. */
   reserveSibling?: string;
+  /** Largura máxima medida neste elemento (ex.: grid de fotos abaixo). */
+  widthRef?: RefObject<HTMLElement | null>;
 };
 
 /** Reduz a fonte até o texto caber em uma linha na largura do pai. */
@@ -12,13 +14,15 @@ export function useFitOneLine<T extends HTMLElement>({
   minPx = 7,
   maxPx = 18,
   reserveSibling,
+  widthRef,
 }: Options = {}) {
   const ref = useRef<T>(null);
 
   useLayoutEffect(() => {
     const el = ref.current;
     const box = el?.parentElement;
-    if (!el || !box) return;
+    const widthEl = widthRef?.current ?? box;
+    if (!el || !box || !widthEl) return;
 
     const fit = () => {
       let reserve = 0;
@@ -30,7 +34,7 @@ export function useFitOneLine<T extends HTMLElement>({
           reserve += gap;
         }
       }
-      const maxW = box.clientWidth - reserve;
+      const maxW = widthEl.clientWidth - reserve;
       if (maxW <= 0) return;
 
       let lo = minPx;
@@ -59,14 +63,15 @@ export function useFitOneLine<T extends HTMLElement>({
 
     fit();
     const ro = new ResizeObserver(fit);
-    ro.observe(box);
+    ro.observe(widthEl);
+    ro.observe(el);
     window.addEventListener("resize", fit);
 
     return () => {
       ro.disconnect();
       window.removeEventListener("resize", fit);
     };
-  }, [minPx, maxPx, reserveSibling]);
+  }, [minPx, maxPx, reserveSibling, widthRef]);
 
   return ref;
 }

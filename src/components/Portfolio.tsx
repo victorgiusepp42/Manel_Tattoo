@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { useFitOneLine } from "../hooks/useFitOneLine";
 import { PORTFOLIO_GALLERY } from "../data/site";
 import { TattooMachineIcon } from "./icons/TattooMachineIcon";
@@ -6,6 +7,7 @@ import { PortfolioStylesLine } from "./PortfolioStylesLine";
 import { SectionHeading } from "./SectionHeading";
 
 export function Portfolio() {
+  const gridRef = useRef<HTMLDivElement>(null);
   const portfolioTitleRef = useFitOneLine<HTMLHeadingElement>({ minPx: 14, maxPx: 36 });
 
   return (
@@ -24,10 +26,10 @@ export function Portfolio() {
             <TattooMachineIcon className="portfolio-intro__icon shrink-0" />
           </div>
 
-          <PortfolioStylesLine />
+          <PortfolioStylesLine widthRef={gridRef} />
         </div>
 
-        <div className="portfolio-grid px-5">
+        <div ref={gridRef} className="portfolio-grid px-5">
           {PORTFOLIO_GALLERY.map((photo) => (
             <article key={photo.id} id={`portfolio-photo-${photo.index}`} className="portfolio-grid__item">
               {photo.missing || photo.slides.length === 0 ? (
