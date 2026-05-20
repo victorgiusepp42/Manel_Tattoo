@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react";
-import type { PortfolioItem } from "../data/site";
 import { InstagramButton } from "./InstagramButton";
 
+export type LightboxItem = {
+  image: string;
+  title: string;
+  imageFocus?: string;
+  style?: string;
+};
+
 type Props = {
-  item: PortfolioItem;
+  item: LightboxItem;
   onClose: () => void;
 };
 
@@ -64,7 +70,7 @@ export function Lightbox({ item, onClose }: Props) {
       </section>
 
       <footer className="lightbox__footer">
-        <span className="pill">{item.style}</span>
+        {item.style ? <span className="pill">{item.style}</span> : null}
         <h3 className="headline-heavy text-2xl text-cream">{item.title}</h3>
         <InstagramButton className="min-h-[48px] w-full sm:w-auto">
           Quero algo assim

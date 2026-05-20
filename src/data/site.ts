@@ -1,4 +1,10 @@
 import { assetUrl } from "../lib/assetUrl";
+import { tripMapPin, type MapPinCity } from "../lib/brazilMapCoords";
+
+function mapPin(city: MapPinCity) {
+  const p = tripMapPin(city);
+  return { mapX: p.x, mapY: p.y };
+}
 
 export const BRAND = {
   name: "Manel Tattoo",
@@ -19,6 +25,108 @@ export const PORTFOLIO_PHOTOS = [
   assetUrl("portfolio/portfolio-3.jpg"),
 ] as const;
 
+export const CATEGORIES = [
+  "Old School",
+  "Blackwork",
+  "Realismo",
+  "Fineline",
+  "Lettering",
+] as const;
+
+export type GallerySlide = {
+  image: string;
+  alt: string;
+};
+
+export type GalleryPhoto = {
+  index: number;
+  id: string;
+  image: string;
+  alt: string;
+  /** Legenda abaixo da foto */
+  style: string;
+  /** Estilo usado pelas pills de filtro */
+  filterStyle: (typeof CATEGORIES)[number];
+  missing?: boolean;
+  /** Slides do carrossel (sempre presente quando não está `missing`) */
+  slides: readonly GallerySlide[];
+  /** Post/reel no Instagram deste slot. */
+  instagramUrl?: string;
+};
+
+function slideFromStem(fileStem: string, caption: string): GallerySlide {
+  return {
+    image: assetUrl(`portfolio/${fileStem}.png`),
+    alt: caption,
+  };
+}
+
+const PORTFOLIO_SLOT_7_SLIDES: readonly GallerySlide[] = [
+  { image: assetUrl("portfolio/7-slide-1.png"), alt: "Old School" },
+  { image: assetUrl("portfolio/7-slide-2.png"), alt: "Old School" },
+  { image: assetUrl("portfolio/7-slide-3.png"), alt: "Old School" },
+] as const;
+
+type GalleryMeta = {
+  index: number;
+  style: string;
+  filterStyle: (typeof CATEGORIES)[number];
+  slides?: readonly GallerySlide[];
+  /** Gera um slide a partir de `public/portfolio/{fileStem}.png` */
+  fileStem?: string;
+  missing?: boolean;
+};
+
+const PORTFOLIO_INSTAGRAM_URLS: Record<number, string | undefined> = {
+  1: "https://www.instagram.com/p/DQt7RKRjSNk/",
+  2: "https://www.instagram.com/p/DTn-joTD2vF/",
+  3: "https://www.instagram.com/p/DTtT6KfD0Iy/",
+  4: "https://www.instagram.com/reel/DKaY1loShgj/",
+  6: "https://www.instagram.com/p/DMbgEAINfZ3/",
+  7: "https://www.instagram.com/reel/DLDrmH_ynB2/",
+  9: "https://www.instagram.com/p/C9f9dSDSq3n/",
+  10: "https://www.instagram.com/p/DKNsiSiSdyc/",
+  11: "https://www.instagram.com/reel/DNgFA9AN5BC/",
+  12: "https://www.instagram.com/reel/DX-EYwDPRIJ/",
+};
+
+const PORTFOLIO_GALLERY_META: GalleryMeta[] = [
+  { index: 1, fileStem: "1_Old_School_Tradicional", style: "Old School", filterStyle: "Old School" },
+  { index: 2, fileStem: "2_Realismo", style: "Realismo", filterStyle: "Realismo" },
+  { index: 3, fileStem: "3_Old_School_Tradicional", style: "Old School", filterStyle: "Old School" },
+  { index: 4, fileStem: "4_Lettering", style: "Lettering", filterStyle: "Lettering" },
+  { index: 5, fileStem: "5_Old_School_Tradicional", style: "Old School", filterStyle: "Old School" },
+  { index: 6, fileStem: "6_Realismo", style: "Realismo", filterStyle: "Realismo" },
+  { index: 7, style: "Old School", filterStyle: "Old School", slides: PORTFOLIO_SLOT_7_SLIDES },
+  { index: 8, fileStem: "8_Old_School_Tradicional", style: "Old School", filterStyle: "Old School" },
+  { index: 9, fileStem: "9_Old_School_Tradicional", style: "Old School", filterStyle: "Old School" },
+  { index: 10, fileStem: "10_Floral", style: "Floral", filterStyle: "Fineline" },
+  { index: 11, fileStem: "11_Old_School_Tradicional4", style: "Old School", filterStyle: "Old School" },
+  { index: 12, fileStem: "12_Realismo", style: "Realismo", filterStyle: "Realismo" },
+];
+
+function metaToGalleryPhoto(m: GalleryMeta): GalleryPhoto {
+  const slides: readonly GallerySlide[] = m.missing
+    ? []
+    : m.slides ?? (m.fileStem ? [slideFromStem(m.fileStem, m.style)] : []);
+
+  const first = slides[0];
+
+  return {
+    index: m.index,
+    id: `gallery-${m.index}`,
+    image: first?.image ?? "",
+    alt: m.style,
+    style: m.style,
+    filterStyle: m.filterStyle,
+    missing: m.missing,
+    slides,
+    instagramUrl: PORTFOLIO_INSTAGRAM_URLS[m.index],
+  };
+}
+
+export const PORTFOLIO_GALLERY: GalleryPhoto[] = PORTFOLIO_GALLERY_META.map(metaToGalleryPhoto);
+
 export const REGIONS = [
   { id: "all", label: "Todo o Brasil" },
   { id: "co", label: "Centro-Oeste" },
@@ -29,14 +137,6 @@ export const REGIONS = [
 ] as const;
 
 export type RegionId = (typeof REGIONS)[number]["id"];
-
-export const CATEGORIES = [
-  "Old School",
-  "Blackwork",
-  "Realismo",
-  "Fineline",
-  "Lettering",
-] as const;
 
 export type PortfolioItem = {
   id: string;
@@ -87,6 +187,69 @@ export const NEXT_CITIES = [
   { city: "Brasília", state: "DF", period: "Jul 2026", status: "em breve" as const },
   { city: "Belo Horizonte", state: "MG", period: "A definir", status: "votacao" as const },
   { city: "São Paulo", state: "SP", period: "A definir", status: "votacao" as const },
+];
+
+export type TripStatus = "confirmado" | "em breve" | "votacao";
+
+export type UpcomingTrip = {
+  id: string;
+  city: string;
+  state: string;
+  /** Intervalo da semana de viagem (ISO). Opcional quando datas a definir. */
+  startDate?: string;
+  endDate?: string;
+  period: string;
+  status: TripStatus;
+  studio: string;
+  address: string;
+  /** Pin no viewBox do mapa SVG (613×639). */
+  mapX: number;
+  mapY: number;
+};
+
+export const UPCOMING_TRIPS: UpcomingTrip[] = [
+  {
+    id: "sp",
+    city: "São Paulo",
+    state: "SP",
+    startDate: "2026-05-25",
+    endDate: "2026-05-29",
+    period: "25/05 a 29/05",
+    status: "confirmado",
+    studio: "Studio XXXXX",
+    address: "Rua XXXXX, Vila Matilde — São Paulo — SP",
+    ...mapPin("sp"),
+  },
+  {
+    id: "rj",
+    city: "Rio de Janeiro",
+    state: "RJ",
+    period: "XX/XX a XX/XX",
+    status: "em breve",
+    studio: "Studio XXXXX",
+    address: "Rua XXXXX XXXXXX — Rio de Janeiro — RJ",
+    ...mapPin("rj"),
+  },
+  {
+    id: "goiania",
+    city: "Goiânia",
+    state: "GO",
+    period: "XX/XX a XX/XX",
+    status: "em breve",
+    studio: "Studio XXXXX",
+    address: "Rua XXXXX XXXXXX — Goiânia — GO",
+    ...mapPin("goiania"),
+  },
+  {
+    id: "brasilia",
+    city: "Brasília",
+    state: "DF",
+    period: "XX/XX a XX/XX",
+    status: "em breve",
+    studio: "Studio XXXXX",
+    address: "Rua XXXXX XXXXXX — Brasília — DF",
+    ...mapPin("brasilia"),
+  },
 ];
 
 export const FAQ_ITEMS = [

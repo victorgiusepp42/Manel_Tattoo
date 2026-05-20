@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { cn } from "../lib/cn";
 
 type Props = {
@@ -6,6 +7,7 @@ type Props = {
   as?: "h2" | "h3";
   size?: "lg" | "md";
   layout?: "stack" | "inline";
+  nowrap?: boolean;
   className?: string;
 };
 
@@ -20,22 +22,32 @@ const sizes = {
   },
 } as const;
 
-export function SectionHeading({
-  line1,
-  line2,
-  as: Tag = "h2",
-  size = "lg",
-  layout = "stack",
-  className,
-}: Props) {
+export const SectionHeading = forwardRef<HTMLHeadingElement, Props>(function SectionHeading(
+  {
+    line1,
+    line2,
+    as: Tag = "h2",
+    size = "lg",
+    layout = "stack",
+    nowrap = false,
+    className,
+  },
+  ref,
+) {
   const s = sizes[size];
   const inline = layout === "inline";
 
   return (
     <Tag
+      ref={ref}
       className={cn(
         "brand-title m-0",
-        inline ? "brand-title--inline flex flex-wrap items-baseline gap-x-3" : "leading-[0.88]",
+        inline
+          ? cn(
+              "brand-title--inline flex items-baseline gap-x-3",
+              nowrap ? "flex-nowrap" : "flex-wrap",
+            )
+          : "leading-[0.88]",
         className,
       )}
     >
@@ -59,4 +71,4 @@ export function SectionHeading({
       </span>
     </Tag>
   );
-}
+});

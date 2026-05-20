@@ -5,7 +5,7 @@ export function Artist() {
   return (
     <section id="artista" className="section-panel py-16 md:py-20 section-enter">
       <div className="mx-auto max-w-3xl px-5">
-        <p className="text-xs font-bold uppercase tracking-[0.25em] text-amber">
+        <p className="text-[1.125rem] font-bold uppercase tracking-[0.25em] text-amber">
           Artista multifacetado
         </p>
         <SectionHeading line1="Um traço." line2="Vários mundos." className="mt-3" />
@@ -19,7 +19,7 @@ export function Artist() {
           vive disso.
         </p>
 
-        <div id="sobre" className="mt-14 border-t border-white/10 pt-14 md:mt-16 md:pt-16">
+        <div id="sobre" className="mt-14 md:mt-16">
           <figure className="about-photo mx-auto mb-6 max-w-[min(100%,320px)]">
             <img
               src={BRAND.aboutPhoto}

@@ -1,30 +1,47 @@
+import { useFitOneLine } from "../hooks/useFitOneLine";
 import { BrandTitle } from "./BrandTitle";
 import { InstagramButton } from "./InstagramButton";
 import { Logo } from "./Logo";
+import { WhatsAppButton } from "./WhatsAppButton";
 
 export function Hero() {
+  const taglinePrimaryRef = useFitOneLine<HTMLParagraphElement>({ minPx: 7, maxPx: 18 });
   return (
     <section
       id="inicio"
-      className="hero relative flex min-h-[100dvh] flex-col overflow-hidden px-5 pb-6"
+      className="hero relative flex min-h-[100dvh] flex-col overflow-x-clip pb-6"
     >
       <div className="hero__inner relative z-10 mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center text-center">
         <div className="hero__content">
-          <div className="hero-brand-cluster">
-            <Logo size="hero" className="logo-tone-original" />
-            <BrandTitle size="hero" className="hero-brand-cluster__title" />
+          <div className="hero__content-top">
+            <div className="hero-brand-cluster">
+              <Logo size="hero" className="logo-tone-original" />
+              <BrandTitle size="hero" className="hero-brand-cluster__title" />
+            </div>
           </div>
 
-          <p className="mx-auto mt-2 max-w-lg text-base font-medium text-muted md:mt-3 md:text-lg">
-            Tatuagem autoral com semanas dedicadas na sua cidade. Traço forte, conversa direta.
-          </p>
+          <div className="hero__taglines">
+            <p
+              ref={taglinePrimaryRef}
+              className="hero__tagline-line hero__tagline-line--primary text-muted"
+            >
+              Tatuagem autoral com semanas dedicadas na sua cidade.
+            </p>
+          </div>
 
-          <div className="mt-4 flex w-full max-w-md flex-col gap-3 sm:mt-5 sm:max-w-none sm:flex-row sm:justify-center">
-            <InstagramButton className="min-h-[48px] w-full sm:w-auto">
-              Chamar no Instagram
+          <div className="hero__actions">
+            <InstagramButton className="hero__cta btn-instagram--compact">
+              <span className="hero__cta-label hero__cta-label--long">Chamar no Instagram</span>
+              <span className="hero__cta-label hero__cta-label--short">Instagram</span>
             </InstagramButton>
-            <a href="#portfolio" className="btn btn-ghost min-h-[48px] w-full sm:w-auto">
-              Ver trabalhos
+            <WhatsAppButton className="hero__cta">
+              <span className="hero__cta-label hero__cta-label--long">WhatsApp</span>
+              <span className="hero__cta-label hero__cta-label--short" aria-hidden>
+                WA
+              </span>
+            </WhatsAppButton>
+            <a href="#portfolio" className="btn hero__cta hero__cta--cutout">
+              <span className="hero__cta-cutout">Ver trabalhos</span>
             </a>
           </div>
         </div>
