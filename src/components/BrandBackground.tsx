@@ -19,7 +19,7 @@ export function BrandBackground() {
   }, []);
 
   return (
-    <div className="brand-bg pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden>
+    <div className="brand-bg fixed inset-0 z-0 overflow-hidden" aria-hidden>
       {/* Ilustração central — sem moldura (crop ampliado) */}
       <div
         ref={artRef}
