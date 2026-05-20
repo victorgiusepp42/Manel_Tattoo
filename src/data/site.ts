@@ -1,19 +1,22 @@
+import { assetUrl } from "../lib/assetUrl";
+
 export const BRAND = {
   name: "Manel Tattoo",
   tagline: "Transforme o que você sente em algo que você vê.",
   instagram: "maneltattoo_",
   studio: "hermanoss.studio",
-  logo: "/manel-logo-clean.png",
-  heroArt: "/manel-hero-2024.png",
-  ogImage: "/manel-hero-2024.png",
+  logo: assetUrl("manel-logo-clean.png"),
+  heroArt: assetUrl("manel-hero-2024.png"),
+  ogImage: assetUrl("manel-hero-2024.png"),
+  aboutPhoto: assetUrl("about/manel-at-work.png"),
   whatsapp: "5564993252550",
   slotsThisMonth: 3,
 } as const;
 
 export const PORTFOLIO_PHOTOS = [
-  "/portfolio/portfolio-1.jpg",
-  "/portfolio/portfolio-2.jpg",
-  "/portfolio/portfolio-3.jpg",
+  assetUrl("portfolio/portfolio-1.jpg"),
+  assetUrl("portfolio/portfolio-2.jpg"),
+  assetUrl("portfolio/portfolio-3.jpg"),
 ] as const;
 
 export const REGIONS = [
@@ -31,7 +34,6 @@ export const CATEGORIES = [
   "Old School",
   "Blackwork",
   "Realismo",
-  "Neotraditional",
   "Fineline",
   "Lettering",
 ] as const;
@@ -54,7 +56,6 @@ const PORTFOLIO_META: Omit<PortfolioItem, "image" | "imageFocus">[] = [
   { id: "bw2", style: "Blackwork", region: "se", title: "Serpente sólida" },
   { id: "re1", style: "Realismo", region: "co", title: "Retrato", beforeAfter: true },
   { id: "re2", style: "Realismo", region: "ne", title: "Felino" },
-  { id: "nt1", style: "Neotraditional", region: "se", title: "Floral neotrad" },
   { id: "fl1", style: "Fineline", region: "s", title: "Linha fina botânica" },
   { id: "lt1", style: "Lettering", region: "co", title: "Script personalizado" },
 ];
@@ -117,7 +118,7 @@ export const TICKER_PHRASES = [
   "Manel Tattoo",
   "Semanas em cidades do Brasil",
   "Chama no Instagram",
-  "Old School · Blackwork · Realismo · Neotrad · Fineline · Lettering",
+  "Old School · Blackwork · Realismo · Fineline · Lettering",
   "@maneltattoo_",
   "Tatuagem autoral · @hermanoss.studio",
 ];

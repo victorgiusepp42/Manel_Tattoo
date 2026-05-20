@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { BRAND } from "../data/site";
+import { assetUrl } from "../lib/assetUrl";
 import { cn } from "../lib/cn";
 
 const heights = {
@@ -15,7 +16,7 @@ type Props = {
   className?: string;
 };
 
-const FALLBACK_LOGO = "/manel-logo.png";
+const FALLBACK_LOGO = assetUrl("manel-logo.png");
 
 export function Logo({ size = "nav", className }: Props) {
   const [src, setSrc] = useState<string>(BRAND.logo);

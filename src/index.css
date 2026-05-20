@@ -354,6 +354,37 @@ body::after {
   width: 100%;
 }
 
+/* ── Rodapé compacto ── */
+.site-footer__inner {
+  padding-top: 1rem;
+  padding-bottom: 1.15rem;
+  gap: 0.3rem;
+}
+
+.site-footer__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  text-align: center;
+}
+
+.site-footer .brand-title__line,
+#sobre .brand-title__line {
+  text-shadow: none;
+}
+
+.about-photo {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 4px;
+  background: rgba(10, 10, 10, 0.5);
+}
+
 .portfolio-placeholder {
   background: linear-gradient(145deg, rgba(22, 22, 22, 0.95), rgba(10, 10, 10, 0.9));
   border: 1px dashed rgba(255, 255, 255, 0.12);

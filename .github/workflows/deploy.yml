@@ -1,5 +1,5 @@
-# MVP_0 — https://victorgiusepp42.github.io/Manel_Tattoo/
-name: MVP_0 Deploy GitHub Pages
+# MVP_1 — https://victorgiusepp42.github.io/Manel_Tattoo/
+name: MVP_1 Deploy GitHub Pages
 
 on:
   push:
@@ -10,12 +10,12 @@ permissions:
   contents: write
 
 concurrency:
-  group: mvp0-pages
+  group: mvp1-pages
   cancel-in-progress: true
 
 jobs:
   deploy:
-    name: MVP_0 publicar site
+    name: MVP_1 publicar site
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -34,4 +34,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           force_orphan: true
-          commit_message: "MVP_0: deploy ${{ github.sha }}"
+          commit_message: "MVP_1: deploy ${{ github.sha }}"

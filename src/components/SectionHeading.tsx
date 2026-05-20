@@ -5,6 +5,7 @@ type Props = {
   line2: string;
   as?: "h2" | "h3";
   size?: "lg" | "md";
+  layout?: "stack" | "inline";
   className?: string;
 };
 
@@ -24,18 +25,33 @@ export function SectionHeading({
   line2,
   as: Tag = "h2",
   size = "lg",
+  layout = "stack",
   className,
 }: Props) {
   const s = sizes[size];
+  const inline = layout === "inline";
 
   return (
-    <Tag className={cn("brand-title m-0 leading-[0.88]", className)}>
-      <span className={cn("brand-title__line block font-black uppercase text-cream", s.line1)}>
+    <Tag
+      className={cn(
+        "brand-title m-0",
+        inline ? "brand-title--inline flex flex-wrap items-baseline gap-x-3" : "leading-[0.88]",
+        className,
+      )}
+    >
+      <span
+        className={cn(
+          "brand-title__line font-black uppercase text-cream",
+          inline ? "inline" : "block",
+          s.line1,
+        )}
+      >
         {line1}
       </span>
       <span
         className={cn(
-          "brand-title__line block font-black uppercase text-gradient-brand",
+          "brand-title__line font-black uppercase text-gradient-brand",
+          inline ? "inline" : "block",
           s.line2,
         )}
       >
