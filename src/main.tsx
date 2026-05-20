@@ -6,7 +6,13 @@ import App from "./App";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+    <BrowserRouter
+      basename={
+        import.meta.env.BASE_URL === "/"
+          ? undefined
+          : import.meta.env.BASE_URL.replace(/\/$/, "")
+      }
+    >
       <App />
     </BrowserRouter>
   </StrictMode>,

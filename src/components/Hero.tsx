@@ -8,7 +8,7 @@ export function Hero() {
       id="inicio"
       className="hero relative flex min-h-[100dvh] flex-col overflow-hidden px-5 pb-6"
     >
-      <div className="hero__inner relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center justify-start text-center">
+      <div className="hero__inner relative z-10 mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center text-center">
         <div className="hero__content">
           <div className="hero-brand-cluster">
             <Logo size="hero" className="logo-tone-original" />
@@ -32,7 +32,7 @@ export function Hero() {
 
       <a
         href="#portfolio"
-        className="hero__scroll relative z-10 mx-auto mt-auto flex min-h-[44px] flex-col items-center gap-1 text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted transition hover:text-red-light"
+        className="hero__scroll relative z-10 mx-auto mt-auto flex min-h-[44px] flex-col items-center gap-0.5 text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted transition hover:text-red-light"
         aria-label="Rolar para portfólio"
       >
         <span>Portfólio</span>

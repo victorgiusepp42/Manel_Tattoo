@@ -50,15 +50,9 @@ body.custom-cursor-off {
   overflow-x: hidden;
 }
 
-/* Altura fixa: ticker (34px) + header */
+/* Altura fixa: só o ticker */
 :root {
-  --site-chrome-h: calc(34px + 4rem);
-}
-
-@media (min-width: 640px) {
-  :root {
-    --site-chrome-h: calc(34px + 4.25rem);
-  }
+  --site-chrome-h: 34px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -172,7 +166,7 @@ body::after {
   height: calc(100dvh - var(--site-chrome-h));
   will-change: transform;
   background-size: auto min(93.6vh, 110.4vw);
-  background-position: center 38%;
+  background-position: center 32%;
   opacity: 0.2;
   filter: saturate(0.82) contrast(0.94) brightness(0.68);
   animation: art-drift 14s ease-in-out infinite;
@@ -182,7 +176,7 @@ body::after {
 @media (min-width: 900px) {
   .brand-bg__art {
     background-size: auto min(98.4vh, 57.6vw);
-    background-position: center 40%;
+    background-position: center 34%;
     opacity: 0.22;
   }
 }
@@ -355,6 +349,11 @@ body::after {
   backdrop-filter: blur(14px) saturate(140%);
 }
 
+.header-bar--spacer .header-bar__spacer {
+  display: block;
+  width: 100%;
+}
+
 .portfolio-placeholder {
   background: linear-gradient(145deg, rgba(22, 22, 22, 0.95), rgba(10, 10, 10, 0.9));
   border: 1px dashed rgba(255, 255, 255, 0.12);
@@ -363,36 +362,42 @@ body::after {
 /* ── Hero FIX 05 ── */
 .hero {
   isolation: isolate;
+  box-sizing: border-box;
+  display: flex;
+  min-height: 100dvh;
+  flex-direction: column;
   padding-top: var(--site-chrome-h);
 }
 
 .hero__inner {
-  margin-top: -2.75rem;
+  display: flex;
+  width: 100%;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 0.5rem 0 3.5rem;
 }
 
-@media (min-width: 640px) {
-  .hero__inner {
-    margin-top: -2.25rem;
-  }
-}
-
-@media (min-width: 768px) {
-  .hero__inner {
-    margin-top: -2rem;
-  }
-}
-
-/* Logo + título + CTAs (+15%) */
+/* Logo + título + CTAs (+15%) — centralizado na moldura */
 .hero__content {
   display: flex;
   width: 100%;
+  max-width: 100%;
   flex-direction: column;
   align-items: center;
-  transform: scale(1.15);
-  transform-origin: top center;
+  transform: scale(1.15) translateY(-1.75vh);
+  transform-origin: center center;
 }
 
 .hero__scroll {
+  margin-bottom: clamp(1.5rem, 4vh, 2.75rem);
+  transform: translateY(-1.25rem);
+}
+
+.hero__scroll svg {
   animation: bounce-soft 2.2s ease-in-out infinite;
 }
 
@@ -426,15 +431,20 @@ body::after {
   background: linear-gradient(
     90deg,
     #fb923c 0%,
-    #fbbf24 28%,
+    #fbbf24 18%,
+    #fcd34d 32%,
+    #fecdd3 48%,
+    #fb7185 58%,
     #fda4af 72%,
-    #fb7185 100%
+    #fbbf24 86%,
+    #fb923c 100%
   );
-  background-size: 200% auto;
+  background-size: 250% 100%;
+  background-position: 0% center;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: shine-text 5s linear infinite;
+  animation: shine-text 7s ease-in-out infinite;
 }
 
 .btn-instagram {
@@ -458,8 +468,12 @@ body::after {
 }
 
 @keyframes shine-text {
-  to {
-    background-position: 200% center;
+  0%,
+  100% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
   }
 }
 

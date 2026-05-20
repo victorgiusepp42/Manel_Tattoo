@@ -3,7 +3,6 @@ import { Artist } from "./components/Artist";
 import { BrandBackground } from "./components/BrandBackground";
 import { CustomCursor } from "./components/CustomCursor";
 import { Footer } from "./components/Footer";
-import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
 import { Portfolio } from "./components/Portfolio";
 import { Ticker } from "./components/Ticker";
@@ -29,7 +28,6 @@ export default function App() {
       <BrandBackground />
       <CustomCursor />
       <Ticker />
-      <Header />
       <Routes>
         <Route
           path="/"

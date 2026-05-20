@@ -1,11 +1,12 @@
 {
   "name": "manel-tattoo",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.0-mvp0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:pages": "tsc -b && vite build --base=/Manel_Tattoo/",
     "preview": "vite preview"
   },
   "dependencies": {

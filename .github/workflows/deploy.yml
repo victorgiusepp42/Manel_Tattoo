@@ -1,15 +1,22 @@
-name: Deploy GitHub Pages
+# MVP_0 — publica em https://victorgiusepp42.github.io/Manel_Tattoo/
+name: MVP_0 Deploy GitHub Pages
 
 on:
   push:
     branches: [main]
+    tags: ["MVP_*"]
   workflow_dispatch:
 
 permissions:
   contents: write
 
+concurrency:
+  group: mvp0-pages
+  cancel-in-progress: true
+
 jobs:
   deploy:
+    name: MVP_0 build and publish
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,12 +26,13 @@ jobs:
           node-version: 22
           cache: npm
 
-      - run: npm ci
-      - run: npm run build
+      - name: Build for GitHub Pages
+        run: npm ci && npm run build:pages
 
-      - name: Deploy to gh-pages branch
+      - name: Publish to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           force_orphan: true
+          commit_message: "MVP_0 deploy ${{ github.sha }}"
