@@ -8,8 +8,6 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 concurrency:
   group: mvp0-pages
@@ -19,11 +17,10 @@ jobs:
   deploy:
     name: MVP_0 publicar site
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -33,7 +30,7 @@ jobs:
       - name: Build
         run: npm ci && npm run build:pages
 
-      - name: Atualizar pasta docs/ na main (opção A nas Settings)
+      - name: Publicar em main/docs
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -41,24 +38,12 @@ jobs:
           publish_dir: ./dist
           destination_dir: docs
           keep_files: true
-          commit_message: "MVP_0: site em docs/"
+          commit_message: "MVP_0: atualiza docs/ para GitHub Pages"
 
-      - name: Atualizar branch gh-pages (opção B nas Settings)
+      - name: Publicar em gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           force_orphan: true
-          commit_message: "MVP_0: site em gh-pages"
-
-      - name: Configurar GitHub Pages (opção C — GitHub Actions)
-        uses: actions/configure-pages@v5
-
-      - name: Publicar via GitHub Actions
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-
-      - name: Deploy
-        id: deployment
-        uses: actions/deploy-pages@v4
+          commit_message: "MVP_0: atualiza gh-pages"
