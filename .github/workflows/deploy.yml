@@ -1,14 +1,15 @@
-# MVP_0 — publica em https://victorgiusepp42.github.io/Manel_Tattoo/
+# MVP_0 — https://victorgiusepp42.github.io/Manel_Tattoo/
 name: MVP_0 Deploy GitHub Pages
 
 on:
   push:
     branches: [main]
-    tags: ["MVP_*"]
   workflow_dispatch:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: mvp0-pages
@@ -16,8 +17,11 @@ concurrency:
 
 jobs:
   deploy:
-    name: MVP_0 build and publish
+    name: MVP_0 publicar site
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -26,13 +30,35 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Build for GitHub Pages
+      - name: Build
         run: npm ci && npm run build:pages
 
-      - name: Publish to gh-pages branch
+      - name: Atualizar pasta docs/ na main (opção A nas Settings)
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: main
+          publish_dir: ./dist
+          destination_dir: docs
+          keep_files: true
+          commit_message: "MVP_0: site em docs/"
+
+      - name: Atualizar branch gh-pages (opção B nas Settings)
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           force_orphan: true
-          commit_message: "MVP_0 deploy ${{ github.sha }}"
+          commit_message: "MVP_0: site em gh-pages"
+
+      - name: Configurar GitHub Pages (opção C — GitHub Actions)
+        uses: actions/configure-pages@v5
+
+      - name: Publicar via GitHub Actions
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
