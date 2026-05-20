@@ -466,19 +466,18 @@ body::after {
   text-shadow: none;
 }
 
-/* Linha de estilos — texto decorativo (não clicável) */
+/* Linha de estilos — preenche a largura do grid; fonte ajustada via useFitOneLine */
 .portfolio-styles {
-  --style-fs: clamp(0.62rem, 2.35vw, 0.82rem);
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
-  justify-content: center;
-  gap: clamp(0.35rem, 1.4vw, 0.65rem);
+  justify-content: space-between;
+  gap: clamp(0.25rem, 1vw, 0.5rem);
   width: 100%;
   margin: 0;
   padding: 0;
-  font-size: var(--style-fs);
-  line-height: 1.2;
+  line-height: 1.15;
+  white-space: nowrap;
 }
 
 .portfolio-styles__word {
@@ -495,7 +494,7 @@ body::after {
 }
 
 .portfolio-styles__shuriken {
-  height: 1em;
+  height: 2.35em;
   width: auto;
   aspect-ratio: 751 / 861;
   flex-shrink: 0;
