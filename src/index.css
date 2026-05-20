@@ -126,31 +126,56 @@ body::after {
   text-shadow: none;
 }
 
-/* Hero: nome quase encostando na logo (referência 3º print) */
+/* Hero: logo encaixada por cima do título (todas as telas) */
 .hero-brand-cluster {
-  display: flex;
+  --logo-overlap: clamp(3.25rem, 24vw, 5.75rem);
+  --title-pull: clamp(2rem, 14vw, 3.35rem);
+  position: relative;
+  display: inline-flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  max-width: min(100%, 28rem);
   margin-top: 0;
 }
 
+.hero-brand-cluster .logo-wrap {
+  position: relative;
+  z-index: 2;
+  margin-bottom: calc(-1 * var(--logo-overlap));
+  line-height: 0;
+}
+
 .hero-brand-cluster .logo-blend {
-  object-position: center 94%;
-  margin-bottom: -3.25rem;
+  display: block;
+  object-position: center bottom;
 }
 
 .hero-brand-cluster__title {
-  margin-top: -2rem;
+  position: relative;
+  z-index: 1;
+  margin-top: calc(-1 * var(--title-pull));
   line-height: 0.72;
+  text-align: center;
 }
 
-@media (min-width: 768px) {
-  .hero-brand-cluster .logo-blend {
-    margin-bottom: -4.25rem;
-  }
+.hero-brand-cluster__title .brand-title__line:first-child {
+  position: relative;
+}
 
-  .hero-brand-cluster__title {
-    margin-top: -2.5rem;
+@media (min-width: 640px) {
+  .hero-brand-cluster {
+    --logo-overlap: clamp(3.75rem, 20vw, 6.25rem);
+    --title-pull: clamp(2.35rem, 12vw, 3.75rem);
+    max-width: min(100%, 32rem);
+  }
+}
+
+@media (min-width: 900px) {
+  .hero-brand-cluster {
+    --logo-overlap: clamp(4.25rem, 18vw, 6.75rem);
+    --title-pull: clamp(2.75rem, 10vw, 4.25rem);
+    max-width: min(100%, 36rem);
   }
 }
 
