@@ -3,32 +3,46 @@ import { useLayoutEffect, useRef, type RefObject } from "react";
 type Options = {
   minPx?: number;
   maxPx?: number;
-  /** Seletor de irmão no mesmo pai cuja largura (+ gap) é descontada do espaço útil. */
   reserveSibling?: string;
-  /** Largura máxima medida neste elemento (ex.: grid de fotos abaixo). */
+  /** Ref para o elemento cuja largura de CONTEÚDO (excluindo padding) é o alvo. */
   widthRef?: RefObject<HTMLElement | null>;
-  /** Fator da largura alvo (ex.: 0.98 = margem de segurança). */
-  widthScale?: number;
-  /** `bounds` usa getBoundingClientRect (mais preciso para flex + ícones). */
-  fitMode?: "scroll" | "bounds";
 };
 
-/** Reduz a fonte até o texto caber em uma linha na largura do pai. */
+/** Ajusta `font-size` do elemento referenciado até caber na largura-alvo.
+ *  Mede o conteúdo com `width: max-content` para funcionar em flex containers. */
 export function useFitOneLine<T extends HTMLElement>({
   minPx = 7,
   maxPx = 18,
   reserveSibling,
   widthRef,
-  widthScale = 1,
-  fitMode = "scroll",
 }: Options = {}) {
   const ref = useRef<T>(null);
 
   useLayoutEffect(() => {
     const el = ref.current;
     const box = el?.parentElement;
-    const widthEl = widthRef?.current ?? box;
-    if (!el || !box || !widthEl) return;
+    if (!el || !box) return;
+
+    const getTargetWidth = () => {
+      const target = widthRef?.current ?? box;
+      const style = getComputedStyle(target);
+      const pl = parseFloat(style.paddingLeft) || 0;
+      const pr = parseFloat(style.paddingRight) || 0;
+      return target.clientWidth - pl - pr;
+    };
+
+    /** Mede a largura real do conteúdo independente de como o container está configurado. */
+    const measureContent = (fontSize: number): number => {
+      el.style.fontSize = `${fontSize}px`;
+      const savedWidth = el.style.width;
+      const savedMaxWidth = el.style.maxWidth;
+      el.style.width = "max-content";
+      el.style.maxWidth = "none";
+      const w = el.getBoundingClientRect().width;
+      el.style.width = savedWidth;
+      el.style.maxWidth = savedMaxWidth;
+      return w;
+    };
 
     const fit = () => {
       let reserve = 0;
@@ -40,41 +54,32 @@ export function useFitOneLine<T extends HTMLElement>({
           reserve += gap;
         }
       }
-      const maxW = (widthEl.clientWidth - reserve) * widthScale;
+
+      const maxW = getTargetWidth() - reserve;
       if (maxW <= 0) return;
 
-      const contentWidth = () =>
-        fitMode === "bounds" ? el.getBoundingClientRect().width : el.scrollWidth;
-
-      let lo = minPx;
-      let hi = maxPx;
-      el.style.fontSize = `${hi}px`;
-      el.style.maxWidth = `${maxW}px`;
-
-      const syncSizeVar = (px: number) => {
-        box.style.setProperty("--fit-one-line-size", `${px}px`);
-      };
-
-      if (contentWidth() <= maxW) {
-        syncSizeVar(hi);
+      // Start at max, shrink if needed
+      if (measureContent(maxPx) <= maxW) {
+        el.style.fontSize = `${maxPx}px`;
+        box.style.setProperty("--fit-one-line-size", `${maxPx}px`);
         return;
       }
 
-      while (hi - lo > 0.5) {
+      let lo = minPx;
+      let hi = maxPx;
+      while (hi - lo > 0.4) {
         const mid = (lo + hi) / 2;
-        el.style.fontSize = `${mid}px`;
-        if (contentWidth() > maxW) hi = mid;
+        if (measureContent(mid) > maxW) hi = mid;
         else lo = mid;
       }
 
       el.style.fontSize = `${lo}px`;
-      el.style.maxWidth = `${maxW}px`;
-      syncSizeVar(lo);
+      box.style.setProperty("--fit-one-line-size", `${lo}px`);
     };
 
     fit();
     const ro = new ResizeObserver(fit);
-    ro.observe(widthEl);
+    ro.observe(widthRef?.current ?? box);
     ro.observe(el);
     window.addEventListener("resize", fit);
 
@@ -82,7 +87,7 @@ export function useFitOneLine<T extends HTMLElement>({
       ro.disconnect();
       window.removeEventListener("resize", fit);
     };
-  }, [minPx, maxPx, reserveSibling, widthRef, widthScale, fitMode]);
+  }, [minPx, maxPx, reserveSibling, widthRef]);
 
   return ref;
 }
