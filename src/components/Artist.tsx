@@ -32,13 +32,22 @@ export function Artist() {
           </figure>
           <SectionHeading line1="Sobre" line2="Manel" layout="inline" className="mb-3" />
           <p className="leading-relaxed text-muted">
-            Tatuador com assinatura autoral — a ilustração que você vê no fundo do site é dele,
-            2024. Trabalha com @{BRAND.studio} e monta semanas em cidades de todo o Brasil pra quem
-            não pode ir até o estúdio.
+            Manel é tatuador em Catalão e desenvolve seus projetos transitando principalmente entre o
+            old school e projetos personalizados construídos junto de cada cliente.
           </p>
           <p className="mt-4 leading-relaxed text-muted">
-            Acredita que tattoo boa começa em conversa honesta: o que você quer sentir quando olhar
-            pro espelho, não só o que está na moda.
+            A ilustração no fundo deste site é uma criação dele, produzida em 2024 — parte de um
+            processo que mistura desenho, composição e identidade visual própria.
+          </p>
+          <p className="mt-4 leading-relaxed text-muted">
+            Atualmente atua no Hermanos Studio em Catalão - GO e também organiza temporadas em
+            cidades de diferentes regiões do Brasil, atendendo pessoas que acompanham seu trabalho à
+            distância.
+          </p>
+          <p className="mt-4 leading-relaxed text-muted">
+            Para Manel, tatuagem não começa na referência pronta nem na tendência do momento. Começa
+            na conversa. Na ideia, na memória, na estética e principalmente na sensação que a pessoa
+            quer carregar quando se olha no espelho.
           </p>
         </div>
       </div>
