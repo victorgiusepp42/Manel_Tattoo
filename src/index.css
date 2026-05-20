@@ -585,7 +585,7 @@ body::after {
 }
 
 .portfolio-grid__meta {
-  --caption-fs: clamp(0.62rem, 2.35vw, 1.4rem);
+  --caption-fs: clamp(0.78rem, 3vw, 1.4rem);
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
@@ -618,13 +618,13 @@ body::after {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  height: var(--caption-fs);
-  padding: 0 0.38em;
+  /* Use padding instead of fixed height so text is always truly centered */
+  padding: 0.22em 0.42em;
   border: 1px solid rgba(255, 255, 255, 0.82);
   border-radius: 0.4em;
   background: transparent;
   font-family: var(--font-display);
-  font-size: 0.72em;
+  font-size: 0.78em;
   font-weight: 400;
   line-height: 1;
   letter-spacing: 0.02em;
@@ -641,12 +641,12 @@ body::after {
 
 @container (max-width: 108px) {
   .portfolio-grid__meta {
-    --caption-fs: clamp(0.56rem, 10cqi, 0.72rem);
+    --caption-fs: clamp(0.62rem, 10cqi, 0.78rem);
   }
 
   .portfolio-grid__more {
-    font-size: 0.68em;
-    padding: 0 0.32em;
+    font-size: 0.72em;
+    padding: 0.18em 0.3em;
   }
 }
 
@@ -726,19 +726,20 @@ body::after {
   flex-direction: column;
   align-items: center;
   transform-origin: center center;
-  /* Contain the scale so it doesn't cause overflow on narrow viewports */
-  contain: layout style;
 }
 
 @media (min-width: 640px) and (min-height: 500px) {
   .hero__content-top {
     transform: scale(1.06);
+    /* Compensate visual scale so tagline doesn't overlap */
+    margin-bottom: 4%;
   }
 }
 
 @media (min-width: 900px) and (min-height: 600px) {
   .hero__content-top {
     transform: scale(1.12);
+    margin-bottom: 8%;
   }
 }
 
