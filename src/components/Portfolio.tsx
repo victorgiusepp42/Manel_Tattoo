@@ -26,6 +26,9 @@ export function Portfolio() {
             <TattooMachineIcon className="portfolio-intro__icon shrink-0" />
           </div>
 
+        </div>
+
+        <div className="portfolio-styles-block px-5">
           <PortfolioStylesLine widthRef={gridRef} />
         </div>
 

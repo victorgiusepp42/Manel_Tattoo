@@ -10,9 +10,11 @@ type Props = {
 
 export function PortfolioStylesLine({ widthRef }: Props) {
   const stylesRef = useFitOneLine<HTMLParagraphElement>({
-    minPx: 7,
-    maxPx: 22,
+    minPx: 6,
+    maxPx: 13,
     widthRef,
+    widthScale: 0.98,
+    fitMode: "bounds",
   });
 
   return (

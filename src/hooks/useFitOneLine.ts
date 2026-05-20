@@ -7,6 +7,10 @@ type Options = {
   reserveSibling?: string;
   /** Largura máxima medida neste elemento (ex.: grid de fotos abaixo). */
   widthRef?: RefObject<HTMLElement | null>;
+  /** Fator da largura alvo (ex.: 0.98 = margem de segurança). */
+  widthScale?: number;
+  /** `bounds` usa getBoundingClientRect (mais preciso para flex + ícones). */
+  fitMode?: "scroll" | "bounds";
 };
 
 /** Reduz a fonte até o texto caber em uma linha na largura do pai. */
@@ -15,6 +19,8 @@ export function useFitOneLine<T extends HTMLElement>({
   maxPx = 18,
   reserveSibling,
   widthRef,
+  widthScale = 1,
+  fitMode = "scroll",
 }: Options = {}) {
   const ref = useRef<T>(null);
 
@@ -34,18 +40,22 @@ export function useFitOneLine<T extends HTMLElement>({
           reserve += gap;
         }
       }
-      const maxW = widthEl.clientWidth - reserve;
+      const maxW = (widthEl.clientWidth - reserve) * widthScale;
       if (maxW <= 0) return;
+
+      const contentWidth = () =>
+        fitMode === "bounds" ? el.getBoundingClientRect().width : el.scrollWidth;
 
       let lo = minPx;
       let hi = maxPx;
       el.style.fontSize = `${hi}px`;
+      el.style.maxWidth = `${maxW}px`;
 
       const syncSizeVar = (px: number) => {
         box.style.setProperty("--fit-one-line-size", `${px}px`);
       };
 
-      if (el.scrollWidth <= maxW) {
+      if (contentWidth() <= maxW) {
         syncSizeVar(hi);
         return;
       }
@@ -53,11 +63,12 @@ export function useFitOneLine<T extends HTMLElement>({
       while (hi - lo > 0.5) {
         const mid = (lo + hi) / 2;
         el.style.fontSize = `${mid}px`;
-        if (el.scrollWidth > maxW) hi = mid;
+        if (contentWidth() > maxW) hi = mid;
         else lo = mid;
       }
 
       el.style.fontSize = `${lo}px`;
+      el.style.maxWidth = `${maxW}px`;
       syncSizeVar(lo);
     };
 
@@ -71,7 +82,7 @@ export function useFitOneLine<T extends HTMLElement>({
       ro.disconnect();
       window.removeEventListener("resize", fit);
     };
-  }, [minPx, maxPx, reserveSibling, widthRef]);
+  }, [minPx, maxPx, reserveSibling, widthRef, widthScale, fitMode]);
 
   return ref;
 }
