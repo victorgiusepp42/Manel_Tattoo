@@ -18,8 +18,14 @@ export function Portfolio() {
   const itemRefs = useRef<Record<string, HTMLElement | null>>({});
   const filterOrder = filtersWithActiveCentered(activeStyle);
   const portfolioTitleRef = useFitOneLine<HTMLHeadingElement>({ minPx: 14, maxPx: 36 });
+  const didMountRef = useRef(false);
 
   useEffect(() => {
+    // Skip on initial mount — only scroll when user actively changes filter
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      return;
+    }
     const first = PORTFOLIO_GALLERY.find((p) => p.filterStyle === activeStyle);
     if (first) {
       itemRefs.current[first.id]?.scrollIntoView({ behavior: "smooth", block: "nearest" });
