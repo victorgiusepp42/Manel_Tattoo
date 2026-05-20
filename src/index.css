@@ -466,39 +466,56 @@ body::after {
   text-shadow: none;
 }
 
-.portfolio-filters {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: clamp(0.25rem, 1.2vw, 0.5rem);
+/* Linha de estilos — texto decorativo (não clicável) */
+.portfolio-styles {
+  --style-fs: clamp(0.62rem, 2.35vw, 0.82rem);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.35rem, 1.4vw, 0.65rem);
   width: 100%;
-  margin-top: 0;
+  margin: 0;
+  padding: 0;
+  font-size: var(--style-fs);
+  line-height: 1.2;
 }
 
-/* Very small screens: allow pills to scroll horizontally */
+.portfolio-styles__word {
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.portfolio-styles__word--featured {
+  font-size: 1.34em;
+}
+
+.portfolio-styles__shuriken {
+  height: 1em;
+  width: auto;
+  aspect-ratio: 751 / 861;
+  flex-shrink: 0;
+  object-fit: contain;
+  opacity: 0.95;
+}
+
 @media (max-width: 360px) {
-  .portfolio-filters {
-    grid-template-columns: repeat(5, minmax(56px, 1fr));
+  .portfolio-styles {
+    justify-content: flex-start;
     overflow-x: auto;
+    flex-wrap: nowrap;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
-    overscroll-behavior-x: contain;
+    padding-bottom: 0.15rem;
   }
 
-  .portfolio-filters::-webkit-scrollbar {
+  .portfolio-styles::-webkit-scrollbar {
     display: none;
   }
-}
-
-.portfolio-filters .pill {
-  box-sizing: border-box;
-  width: 100%;
-  min-width: 0;
-  min-height: clamp(2.25rem, 6vw, 2.5rem);
-  padding: 0.4rem clamp(0.2rem, 1vw, 0.65rem);
-  font-size: clamp(0.5625rem, 2.35vw, 1.02rem);
-  letter-spacing: clamp(0.04em, 0.35vw, 0.1em);
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .portfolio-grid {
