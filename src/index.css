@@ -26,15 +26,17 @@
 
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
-  overflow-y: auto;
+  /* clip: corta sem criar scroll container — não interfere com scroll da página */
+  overflow-x: clip;
+  /* SEM overflow-y: body é o scroll container natural */
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  overflow-x: hidden;
-  overflow-y: auto;
+  /* clip no x: sem scroll container — não quebra scroll em Android Chrome */
+  overflow-x: clip;
+  /* SEM overflow-y: mantém body como único scroll container */
   font-family: var(--font-condensed);
   font-size: 1rem;
   line-height: 1.65;
@@ -43,12 +45,12 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   cursor: auto;
-  /* Prevent elastic overscroll flash on iOS */
   overscroll-behavior-y: none;
 }
 
 #root {
-  overflow-x: hidden;
+  /* Sem overflow: não criar scroll container extra */
+  min-height: 100%;
 }
 
 /* Altura fixa: só o ticker */
