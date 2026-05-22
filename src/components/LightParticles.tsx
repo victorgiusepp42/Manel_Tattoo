@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useScrollIdleRef } from "../hooks/useScrollIdle";
 
 type Particle = {
   x: number;
@@ -27,6 +28,7 @@ const COLORS = [
 
 export function LightParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const scrollIdleRef = useScrollIdleRef(140);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -37,12 +39,15 @@ export function LightParticles() {
     let frame = 0;
     let tick = 0;
     let particles: Particle[] = [];
+    const coarse = window.matchMedia("(pointer: coarse)").matches;
+    const maxCount = coarse ? 42 : 95;
+    const minCount = coarse ? 28 : 58;
 
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       const area = canvas.width * canvas.height;
-      const count = Math.min(95, Math.max(58, Math.round(area / 7200)));
+      const count = Math.min(maxCount, Math.max(minCount, Math.round(area / (coarse ? 11000 : 7200))));
 
       particles = Array.from({ length: count }, (_, i) => {
         const glow = i % 4 === 0;
@@ -80,7 +85,12 @@ export function LightParticles() {
     };
 
     const draw = () => {
+      frame = requestAnimationFrame(draw);
+      if (document.hidden) return;
+
       tick += 1;
+      if (!scrollIdleRef.current) return;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.globalCompositeOperation = "lighter";
       particles.forEach((p) => {
@@ -95,18 +105,17 @@ export function LightParticles() {
         drawParticle(p, Math.min(0.62, p.a * pulse));
       });
       ctx.globalCompositeOperation = "source-over";
-      frame = requestAnimationFrame(draw);
     };
 
     resize();
     draw();
-    window.addEventListener("resize", resize);
+    window.addEventListener("resize", resize, { passive: true });
 
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener("resize", resize);
     };
-  }, []);
+  }, [scrollIdleRef]);
 
   return <canvas ref={canvasRef} className="light-particles" aria-hidden />;
 }

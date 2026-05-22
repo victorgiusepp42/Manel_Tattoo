@@ -4,8 +4,8 @@ import { cn } from "../lib/cn";
 type Size = "hero" | "footer";
 
 const sizes = {
-  hero: "h-auto w-full max-w-full",
-  footer: "w-[min(78vw,11rem)] sm:w-[min(70vw,12.5rem)]",
+  hero: "h-auto w-auto max-w-full",
+  footer: "w-[min(58.5vw,8.25rem)] sm:w-[min(52.5vw,9.375rem)]",
 } as const;
 
 type Props = {
@@ -23,6 +23,7 @@ export function BrandLockupImage({ size = "hero", className }: Props) {
       height={1024}
       className={cn("brand-lockup-image block h-auto max-w-full object-contain", sizes[size], className)}
       decoding="async"
+      fetchPriority="high"
       draggable={false}
     />
   );

@@ -14,6 +14,8 @@ export const BRAND = {
   logo: assetUrl("manel-logo-clean.png"),
   wordmark: assetUrl("manel-brand-wordmark.png"),
   brandLockup: assetUrl("manel-brand-lockup.png"),
+  brandLockupMark: assetUrl("manel-brand-lockup-mark.png"),
+  brandTattooMask: assetUrl("manel-brand-tattoo-mask.png"),
   heroArt: assetUrl("manel-hero-2024.png"),
   ogImage: assetUrl("manel-hero-2024.png"),
   aboutPhoto: assetUrl("about/manel-at-work.png"),

@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { useFitOneLine } from "../hooks/useFitOneLine";
-import { BrandLockupImage } from "./BrandLockupImage";
+import { HeroBrandLockup } from "./HeroBrandLockup";
 import { InstagramButton } from "./InstagramButton";
 import { WhatsAppButton } from "./WhatsAppButton";
 import { TattooMachineIcon } from "./icons/TattooMachineIcon";
@@ -21,7 +21,7 @@ export function Hero() {
       <div className="hero__inner relative z-10 mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center text-center">
         <div className="hero__content">
           <div className="hero__content-top">
-            <BrandLockupImage size="hero" className="hero-brand-lockup" />
+            <HeroBrandLockup className="hero-brand-lockup" />
           </div>
 
           <div ref={actionsRef} className="hero__actions">

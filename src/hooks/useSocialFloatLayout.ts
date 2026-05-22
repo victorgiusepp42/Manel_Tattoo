@@ -14,10 +14,13 @@ export type SocialFloatLayout = {
 function bottomInsetPx(): number {
   const root = document.documentElement;
   const rem = parseFloat(getComputedStyle(root).fontSize) || 16;
-  // Read the CSS custom property --safe-area-bottom (set in index.css via env())
   const raw = getComputedStyle(root).getPropertyValue("--safe-area-bottom").trim();
   const safe = parseFloat(raw);
   return Math.max(rem, Number.isFinite(safe) && safe > 0 ? safe : 0);
+}
+
+function sameLayout(a: SocialFloatLayout, b: SocialFloatLayout): boolean {
+  return a.mode === b.mode && a.parkedTop === b.parkedTop;
 }
 
 /** Limite = topo de #portfolio; fixos ao descer; parados no limite só ao subir e encostar nele. */
@@ -26,6 +29,13 @@ export function useSocialFloatLayout(buttonHeight: number): SocialFloatLayout {
   const lastScrollYRef = useRef(0);
   const wasVisibleRef = useRef(false);
   const atLimitRef = useRef(false);
+  const layoutRef = useRef<SocialFloatLayout>({ mode: "hidden" });
+
+  const commit = (next: SocialFloatLayout) => {
+    if (sameLayout(layoutRef.current, next)) return;
+    layoutRef.current = next;
+    setLayout(next);
+  };
 
   useEffect(() => {
     if (buttonHeight <= 0) return;
@@ -56,19 +66,19 @@ export function useSocialFloatLayout(buttonHeight: number): SocialFloatLayout {
       if (!visible) {
         wasVisibleRef.current = false;
         atLimitRef.current = false;
-        setLayout({ mode: "hidden" });
+        commit({ mode: "hidden" });
         return;
       }
 
       if (!wasVisibleRef.current) {
         wasVisibleRef.current = true;
-        setLayout({ mode: "fixed" });
+        commit({ mode: "fixed" });
         return;
       }
 
       if (scrollingDown) {
         atLimitRef.current = false;
-        setLayout({ mode: "fixed" });
+        commit({ mode: "fixed" });
         return;
       }
 
@@ -79,14 +89,14 @@ export function useSocialFloatLayout(buttonHeight: number): SocialFloatLayout {
       }
 
       if (scrollingUp && atLimitRef.current) {
-        setLayout({
+        commit({
           mode: "parked",
           parkedTop: scrollY + parkedTopViewport,
         });
         return;
       }
 
-      setLayout({ mode: "fixed" });
+      commit({ mode: "fixed" });
     };
 
     const onChange = () => {
@@ -96,7 +106,7 @@ export function useSocialFloatLayout(buttonHeight: number): SocialFloatLayout {
 
     sync();
     window.addEventListener("scroll", onChange, { passive: true });
-    window.addEventListener("resize", onChange);
+    window.addEventListener("resize", onChange, { passive: true });
 
     return () => {
       cancelAnimationFrame(raf);
