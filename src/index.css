@@ -1830,11 +1830,11 @@ body::after {
 
 /* Agende aqui — cor do tom do pin */
 .trip-card__agendar.btn-whatsapp {
-  min-height: clamp(28px, 7.5vw, 2.78em);
+  min-height: clamp(30px, 7.8vw, 2.85em);
   gap: 0.28em;
-  padding: 0.34em 0.62em;
+  padding: 0.36em 0.66em;
   border-radius: 999px;
-  font-size: clamp(0.62rem, 2.15vw, 1.43rem);
+  font-size: clamp(0.65rem, 2.25vw, 1.48rem);
   font-weight: 800;
   line-height: 1;
   letter-spacing: 0.05em;
@@ -1861,9 +1861,9 @@ body::after {
 }
 
 .trip-card__agendar-hand {
-  width: 0.95em;
+  width: 1em;
   height: auto;
-  max-height: 0.95em;
+  max-height: 1em;
   flex-shrink: 0;
   object-fit: contain;
 }
@@ -1925,9 +1925,9 @@ body::after {
   }
 
   .trip-card__agendar.btn-whatsapp {
-    min-height: 26px;
-    padding: 0.3em 0.5em;
-    font-size: clamp(0.58rem, 2vw, 0.78rem);
+    min-height: 28px;
+    padding: 0.32em 0.54em;
+    font-size: clamp(0.61rem, 2.1vw, 0.82rem);
     letter-spacing: 0.04em;
   }
 
