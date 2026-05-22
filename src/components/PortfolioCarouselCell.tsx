@@ -3,9 +3,9 @@ import { createPortal } from "react-dom";
 import { cn } from "../lib/cn";
 import type { GalleryPhoto, GallerySlide } from "../data/site";
 
-/** Toque rápido (< 0,7s) troca de foto; segurar 0,7s abre o zoom. */
-const TAP_MS = 700;
-const ZOOM_HOLD_MS = 700;
+/** Toque rápido (< 0,6s) troca de foto; segurar 0,6s abre o zoom. */
+const TAP_MS = 600;
+const ZOOM_HOLD_MS = 600;
 const PEEK_ANIM_MS = 620;
 
 type Props = {
@@ -151,8 +151,8 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
         onContextMenu={(e) => e.preventDefault()}
         aria-label={
           n > 1
-            ? `${photo.style}: toque rápido para próxima foto, segure 0,7s para ampliar (${active + 1} de ${n})`
-            : `${photo.style}: segure 0,7s para ampliar`
+            ? `${photo.style}: toque rápido para próxima foto, segure 0,6s para ampliar (${active + 1} de ${n})`
+            : `${photo.style}: segure 0,6s para ampliar`
         }
       >
         <img
