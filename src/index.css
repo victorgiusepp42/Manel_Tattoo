@@ -931,7 +931,7 @@ body::after {
 }
 
 .hero__cluster {
-  --hero-cta-height: clamp(20px, 5.1vw, 24px);
+  --hero-cta-height: clamp(22px, 5.6vw, 26px);
   display: flex;
   width: 100%;
   max-width: min(100%, 40.48rem);
@@ -948,9 +948,18 @@ body::after {
   margin-bottom: 0;
 }
 
-/* Espaço TATTOO → botões = altura exata do botão (mesma variável) */
-.hero__cluster .hero-brand-lockup + .hero__actions {
+/* Espaço TATTOO → botões = altura do botão (mesma variável) */
+.hero__cluster .hero-brand-lockup + .hero__cta-block {
   margin-top: var(--hero-cta-height);
+}
+
+.hero__cta-block {
+  display: flex;
+  width: 100%;
+  max-width: min(100%, 40rem);
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: center;
 }
 
 @media (max-height: 720px) {
@@ -1016,7 +1025,6 @@ body::after {
   display: flex;
   box-sizing: border-box;
   width: 100%;
-  max-width: min(100%, 40rem);
   flex: 0 0 auto;
   flex-direction: row;
   align-items: stretch;
@@ -1026,16 +1034,6 @@ body::after {
 
 /* Landscape phone: compress vertical spacing */
 @media (max-height: 500px) and (orientation: landscape) {
-  .hero__cluster .hero-brand-lockup + .hero__actions {
-    margin-top: var(--hero-cta-height);
-  }
-
-  .hero__actions .hero__cta {
-    min-height: 20px;
-    height: 20px;
-    max-height: 20px;
-  }
-
   .hero__taglines {
     margin-top: 0.35rem;
   }
@@ -1047,24 +1045,21 @@ body::after {
   min-width: 0;
   box-sizing: border-box;
   min-height: var(--hero-cta-height);
-  height: var(--hero-cta-height);
-  max-height: var(--hero-cta-height);
-  padding-block: 0;
-  padding-inline: clamp(0.25rem, 1.5vw, 0.75rem);
+  padding: 0.38rem clamp(0.25rem, 1.5vw, 0.75rem);
+  border: none;
+  outline: none;
   font-family: var(--font-manel);
   font-weight: 400;
   font-size: clamp(0.45rem, 2.15vw, 0.82rem);
   letter-spacing: clamp(0.04em, 0.25vw, 0.1em);
-  line-height: 1;
+  line-height: 1.15;
   text-align: center;
   white-space: nowrap;
-  border: none;
-  outline: none;
-  /* overflow hidden must be off to keep focus ring visible */
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+  touch-action: manipulation;
 }
 
 .hero__cta:focus-visible {
@@ -1077,26 +1072,14 @@ body::after {
 }
 
 @media (max-width: 640px) {
-  .hero__actions {
+  .hero__cta-block {
     width: calc(100% + 0.6rem);
     max-width: none;
-    margin-top: 0;
     margin-inline: -0.3rem;
+  }
+
+  .hero__actions {
     gap: 0.28rem;
-  }
-
-  .hero__cluster .hero-brand-lockup + .hero__actions {
-    margin-top: var(--hero-cta-height);
-  }
-
-  .hero__actions .hero__cta,
-  .hero__actions .btn.hero__cta {
-    min-height: var(--hero-cta-height);
-    height: var(--hero-cta-height);
-    max-height: var(--hero-cta-height);
-    padding-block: 0;
-    padding-inline: clamp(0.32rem, 2.4vw, 0.55rem);
-    font-size: clamp(0.42rem, 2.35vw, 0.72rem);
   }
 
   .hero__cta.btn-instagram--compact svg,
