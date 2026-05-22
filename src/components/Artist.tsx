@@ -10,13 +10,13 @@ export function Artist() {
         </p>
         <SectionHeading line1="Um traço." line2="Vários mundos." className="mt-3" />
         <p className="mt-6 leading-relaxed text-muted">
-          Old school colorido na veia, mas sem prender você num único estilo. Blackwork pesado,
-          realismo que parece foto, fineline delicado e lettering que carrega
-          frase de verdade.
+          Cada projeto é pensado de forma única, respeitando a ideia do cliente e a personalidade que
+          a tatuagem precisa carregar. Mais do que seguir um único padrão, a proposta é criar peças
+          com presença, equilíbrio estético e originalidade.
         </p>
         <p className="mt-4 leading-relaxed text-muted">
-          Não é catálogo de estúdio — é conversa, desenho na medida e entrega com técnica de quem
-          vive disso.
+          Diferentes estilos conectados pela mesma essência: tatuagens feitas com intenção,
+          personalidade e força visual.
         </p>
 
         <div id="sobre" className="mt-14 md:mt-16">

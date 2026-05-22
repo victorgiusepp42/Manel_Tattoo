@@ -40,30 +40,13 @@ export function Hero() {
           <div className="hero__taglines">
             <p
               ref={taglinePrimaryRef}
-              className="hero__tagline-line hero__tagline-line--primary text-muted"
+              className="hero__tagline-line hero__tagline-line--primary font-manel text-muted"
             >
               Tatuagem autoral com semanas dedicadas na sua cidade.
             </p>
           </div>
         </div>
       </div>
-
-      <a
-        href="#portfolio"
-        className="hero__scroll relative z-10 text-muted transition hover:text-red-light"
-        aria-label="Rolar para portfólio"
-      >
-        <span className="hero__scroll-label">Portfólio</span>
-        <svg className="hero__scroll-icon" viewBox="0 0 24 24" fill="none" aria-hidden>
-          <path
-            d="M12 5v14M6 13l6 6 6-6"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </a>
     </section>
   );
 }

@@ -56,11 +56,15 @@ export type GalleryPhoto = {
   instagramUrl?: string;
 };
 
-function slideFromStem(fileStem: string, caption: string): GallerySlide {
+function slideAt(index: number, slide: 1 | 2, caption: string): GallerySlide {
   return {
-    image: assetUrl(`portfolio/${fileStem}.png`),
+    image: assetUrl(`portfolio/${index}-slide-${slide}.png`),
     alt: caption,
   };
+}
+
+function dualSlides(index: number, caption: string): readonly GallerySlide[] {
+  return [slideAt(index, 1, caption), slideAt(index, 2, caption)] as const;
 }
 
 const PORTFOLIO_SLOT_7_SLIDES: readonly GallerySlide[] = [
@@ -73,9 +77,7 @@ type GalleryMeta = {
   index: number;
   style: string;
   filterStyle: (typeof CATEGORIES)[number];
-  slides?: readonly GallerySlide[];
-  /** Gera um slide a partir de `public/portfolio/{fileStem}.png` */
-  fileStem?: string;
+  slides: readonly GallerySlide[];
   missing?: boolean;
 };
 
@@ -93,24 +95,22 @@ const PORTFOLIO_INSTAGRAM_URLS: Record<number, string | undefined> = {
 };
 
 const PORTFOLIO_GALLERY_META: GalleryMeta[] = [
-  { index: 1, fileStem: "1_Old_School_Tradicional", style: "Old School", filterStyle: "Old School" },
-  { index: 2, fileStem: "2_Realismo", style: "Realismo", filterStyle: "Realismo" },
-  { index: 3, fileStem: "3_Old_School_Tradicional", style: "Old School", filterStyle: "Old School" },
-  { index: 4, fileStem: "4_Lettering", style: "Lettering", filterStyle: "Lettering" },
-  { index: 5, fileStem: "5_Old_School_Tradicional", style: "Old School", filterStyle: "Old School" },
-  { index: 6, fileStem: "6_Realismo", style: "Realismo", filterStyle: "Realismo" },
+  { index: 1, style: "Old School", filterStyle: "Old School", slides: dualSlides(1, "Old School") },
+  { index: 2, style: "Realismo", filterStyle: "Realismo", slides: dualSlides(2, "Realismo") },
+  { index: 3, style: "Old School", filterStyle: "Old School", slides: dualSlides(3, "Old School") },
+  { index: 4, style: "Lettering", filterStyle: "Lettering", slides: dualSlides(4, "Lettering") },
+  { index: 5, style: "Old School", filterStyle: "Old School", slides: dualSlides(5, "Old School") },
+  { index: 6, style: "Realismo", filterStyle: "Realismo", slides: dualSlides(6, "Realismo") },
   { index: 7, style: "Old School", filterStyle: "Old School", slides: PORTFOLIO_SLOT_7_SLIDES },
-  { index: 8, fileStem: "8_Old_School_Tradicional", style: "Old School", filterStyle: "Old School" },
-  { index: 9, fileStem: "9_Old_School_Tradicional", style: "Old School", filterStyle: "Old School" },
-  { index: 10, fileStem: "10_Floral", style: "Floral", filterStyle: "Fineline" },
-  { index: 11, fileStem: "11_Old_School_Tradicional4", style: "Old School", filterStyle: "Old School" },
-  { index: 12, fileStem: "12_Realismo", style: "Realismo", filterStyle: "Realismo" },
+  { index: 8, style: "Old School", filterStyle: "Old School", slides: dualSlides(8, "Old School") },
+  { index: 9, style: "Old School", filterStyle: "Old School", slides: dualSlides(9, "Old School") },
+  { index: 10, style: "Floral", filterStyle: "Fineline", slides: dualSlides(10, "Floral") },
+  { index: 11, style: "Old School", filterStyle: "Old School", slides: dualSlides(11, "Old School") },
+  { index: 12, style: "Realismo", filterStyle: "Realismo", slides: dualSlides(12, "Realismo") },
 ];
 
 function metaToGalleryPhoto(m: GalleryMeta): GalleryPhoto {
-  const slides: readonly GallerySlide[] = m.missing
-    ? []
-    : m.slides ?? (m.fileStem ? [slideFromStem(m.fileStem, m.style)] : []);
+  const slides: readonly GallerySlide[] = m.missing ? [] : m.slides;
 
   const first = slides[0];
 
