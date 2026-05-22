@@ -68,4 +68,4 @@ for (const [indexStr, stem] of Object.entries(STEM_BY_INDEX)) {
   copyFile(slide2Src, path.join(portfolioDir, `${n}-slide-2.png`));
 }
 
-console.log("Slot 7 mantém 7-slide-1/2/3.png (sem alteração).");
+console.log("Slot 7: usa 7-slide-1.png e 7-slide-3.png (2 fotos; slide-2 ignorado).");

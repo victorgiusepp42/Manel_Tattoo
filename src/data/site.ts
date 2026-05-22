@@ -69,7 +69,6 @@ function dualSlides(index: number, caption: string): readonly GallerySlide[] {
 
 const PORTFOLIO_SLOT_7_SLIDES: readonly GallerySlide[] = [
   { image: assetUrl("portfolio/7-slide-1.png"), alt: "Old School" },
-  { image: assetUrl("portfolio/7-slide-2.png"), alt: "Old School" },
   { image: assetUrl("portfolio/7-slide-3.png"), alt: "Old School" },
 ] as const;
 
