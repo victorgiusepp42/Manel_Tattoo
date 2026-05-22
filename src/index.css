@@ -76,8 +76,26 @@ body {
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
   --safe-area-left: env(safe-area-inset-left, 0px);
   --safe-area-right: env(safe-area-inset-right, 0px);
+  /* Barra inferior do browser (Chrome/Safari mobile) — safe-area sozinha não cobre tudo */
+  --hero-bottom-gutter: 0px;
+  --hero-optical-lift: 0.35rem;
   --spr: cubic-bezier(0.34, 1.4, 0.64, 1);
   color-scheme: dark;
+}
+
+@media (max-width: 900px) {
+  :root {
+    /* Chrome iOS/Android: barra inferior + safe-area (tagline) */
+    --hero-bottom-gutter: max(env(safe-area-inset-bottom, 0px), 4.5rem);
+    /* Meio-termo Safari/Chrome: sobe o bloco sem exagerar no Safari */
+    --hero-optical-lift: clamp(0.45rem, 1.65dvh, 0.9rem);
+  }
+}
+
+@media (min-width: 901px) {
+  :root {
+    --hero-optical-lift: 0.35rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -161,10 +179,16 @@ body::after {
   display: inline-block;
   line-height: 0;
   max-width: min(100%, 30.36rem);
-  max-height: min(100%, 45.54lvh, 25.3rem);
+  max-height: min(100%, 45.54svh, 25.3rem);
   margin-inline: auto;
   filter: brightness(1.14) contrast(1.1) saturate(1.2)
     drop-shadow(0 8px 22px rgba(0, 0, 0, 0.55));
+}
+
+@media (min-width: 901px) {
+  .hero-brand-lockup-stack {
+    max-height: min(100%, 45.54lvh, 25.3rem);
+  }
 }
 
 .hero-brand-lockup-stack .brand-lockup-image {
@@ -176,7 +200,7 @@ body::after {
   width: auto;
   height: auto;
   max-width: 100%;
-  max-height: min(100%, 45.54lvh, 25.3rem);
+  max-height: min(100%, 45.54svh, 25.3rem);
   object-fit: contain;
   object-position: center center;
 }
@@ -193,7 +217,7 @@ body::after {
   -webkit-mask-position: center;
 }
 
-.hero__content-top .hero-brand-lockup {
+.hero__cluster .hero-brand-lockup {
   display: inline-block;
   width: auto;
   height: auto;
@@ -288,25 +312,26 @@ body::after {
 .brand-bg {
   min-height: 100dvh;
   min-height: 100svh;
-  contain: strict;
 }
 
 .brand-bg__art,
 .brand-bg__veil {
-  /* Mesma caixa visível do hero (abaixo do ticker), não o viewport inteiro */
   top: var(--site-chrome-h);
-  height: calc(100svh - var(--site-chrome-h));
-  height: calc(100lvh - var(--site-chrome-h));
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: auto;
 }
 
+/* Imagem completa visível (sem crop de cover/scale) */
 .brand-bg__art {
-  background-size: cover;
+  background-size: contain;
   background-position: center center;
   background-repeat: no-repeat;
   opacity: 0.5;
   filter: saturate(0.98) contrast(1.04) brightness(0.9);
   animation: art-breathe 9s ease-in-out infinite;
-  transform: translate3d(0, 0, 0) scale(0.9);
+  transform: translate3d(0, 0, 0);
   transform-origin: center center;
 }
 
@@ -322,13 +347,13 @@ body::after {
 @keyframes art-breathe {
   0%,
   100% {
-    transform: translate3d(0, 0, 0) scale(0.9) rotate(0deg);
+    transform: translate3d(0, 0, 0) rotate(0deg);
   }
   33% {
-    transform: translate3d(3px, -10px, 0) scale(0.925) rotate(0.35deg);
+    transform: translate3d(3px, -6px, 0) rotate(0.35deg);
   }
   66% {
-    transform: translate3d(-4px, -18px, 0) scale(0.938) rotate(-0.25deg);
+    transform: translate3d(-4px, -10px, 0) rotate(-0.25deg);
   }
 }
 
@@ -846,15 +871,23 @@ body::after {
   isolation: isolate;
   box-sizing: border-box;
   display: flex;
-  height: 100svh;
-  height: 100lvh;
-  max-height: 100lvh;
+  height: 100dvh;
+  max-height: 100dvh;
   min-height: 100svh;
-  min-height: 100lvh;
+  min-height: 100dvh;
   flex-direction: column;
   padding-top: var(--site-chrome-h);
+  padding-bottom: 0;
   overflow: hidden;
   background: transparent;
+}
+
+@media (min-width: 901px) {
+  .hero {
+    height: 100lvh;
+    max-height: 100lvh;
+    min-height: 100lvh;
+  }
 }
 
 .hero__inner {
@@ -871,7 +904,7 @@ body::after {
     clamp(0.5rem, 2vh, 1rem);
 }
 
-/* Logo + CTAs + tagline — tudo dentro do 100dvh */
+/* Bloco único centralizado: logo + botões + tagline */
 .hero__content {
   display: flex;
   box-sizing: border-box;
@@ -885,36 +918,57 @@ body::after {
   align-items: center;
   justify-content: center;
   text-align: center;
-  gap: clamp(0.3rem, 1.2vh, 0.55rem);
   padding-inline: clamp(0.75rem, 4.5vw, 1.5rem);
+  padding-bottom: var(--hero-bottom-gutter);
   margin-inline: auto;
   overflow: hidden;
 }
 
-.hero__content-top {
+@media (min-width: 901px) {
+  .hero__content {
+    padding-bottom: 0;
+  }
+}
+
+.hero__cluster {
+  --hero-cta-height: clamp(26px, 6.75vw, 32px);
   display: flex;
   width: 100%;
   max-width: min(100%, 40.48rem);
   min-height: 0;
-  flex: 1 1 auto;
+  max-height: 100%;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  max-height: min(56lvh, calc(100% - 6.5rem));
-  overflow: hidden;
+  transform: translateY(calc(var(--hero-optical-lift, 0.5rem) * -1));
+}
+
+.hero__cluster .hero-brand-lockup {
+  flex: 0 0 auto;
 }
 
 @media (max-height: 720px) {
   .hero-brand-lockup-stack,
   .hero-brand-lockup-stack__mark {
     max-width: min(100%, 26.57rem);
+    max-height: min(100%, 37.95svh, 21.51rem);
+  }
+}
+
+@media (max-height: 720px) and (min-width: 901px) {
+  .hero-brand-lockup-stack,
+  .hero-brand-lockup-stack__mark {
     max-height: min(100%, 37.95lvh, 21.51rem);
   }
 }
 
 @media (max-height: 560px) and (orientation: landscape) {
-  .hero__content-top {
-    max-height: min(48lvh, calc(100% - 5.5rem));
+  .hero__content {
+    padding-bottom: max(env(safe-area-inset-bottom, 0px), 3.25rem);
+  }
+
+  .hero__cluster {
+    --hero-optical-lift: clamp(0.25rem, 1dvh, 0.55rem);
   }
 
   .hero-brand-lockup-stack,
@@ -928,11 +982,11 @@ body::after {
   container-type: inline-size;
   display: flex;
   width: 100%;
-  max-width: min(100%, 40rem);
   flex: 0 0 auto;
   flex-direction: column;
   align-items: center;
-  margin-top: 0;
+  margin: clamp(0.2rem, 0.9vh, 0.4rem) 0 0;
+  padding: 0;
 }
 
 .hero__tagline-line {
@@ -961,7 +1015,7 @@ body::after {
   flex-direction: row;
   align-items: stretch;
   gap: clamp(0.25rem, 1.2vw, 0.55rem);
-  margin-top: -0.45rem;
+  margin-top: var(--hero-cta-height, clamp(26px, 6.75vw, 32px));
 }
 
 /* Landscape phone: compress vertical spacing */
@@ -984,7 +1038,7 @@ body::after {
 .hero__cta {
   flex: 1 1 0;
   min-width: 0;
-  min-height: clamp(26px, 6.75vw, 32px);
+  min-height: var(--hero-cta-height, clamp(26px, 6.75vw, 32px));
   padding: 0.38rem clamp(0.25rem, 1.5vw, 0.75rem);
   font-family: var(--font-manel);
   font-weight: 400;
@@ -1015,7 +1069,7 @@ body::after {
   .hero__actions {
     width: calc(100% + 0.6rem);
     max-width: none;
-    margin-top: -0.6rem;
+    margin-top: 0;
     margin-inline: -0.3rem;
     gap: 0.28rem;
   }
