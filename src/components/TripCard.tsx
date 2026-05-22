@@ -1,5 +1,6 @@
-import { tripAgendarMessage, type UpcomingTrip } from "../data/site";
+import { tripAgendarMessage, tripPinTone, type UpcomingTrip } from "../data/site";
 import { cn } from "../lib/cn";
+import { HomeIcon } from "./icons/HomeIcon";
 import { PointingHandIcon } from "./icons/PointingHandIcon";
 import { WhatsAppButton } from "./WhatsAppButton";
 
@@ -11,17 +12,33 @@ type Props = {
 
 export function TripCard({ trip }: Props) {
   const showPeriod = TRIPS_WITH_DATES.has(trip.id) && trip.period.trim().length > 0;
-  const isFeatured = trip.id === "catalao";
+  const tone = tripPinTone(trip);
+  const isCatalao = trip.id === "catalao";
 
   return (
-    <article className={cn("trip-card card-surface", isFeatured && "trip-card--featured")}>
+    <article
+      className={cn(
+        "trip-card card-surface",
+        `trip-card--tone-${tone}`,
+        isCatalao && "trip-card--catalao",
+      )}
+    >
       <div className="trip-card__layout">
         <div className="trip-card__main">
           <h3 className="trip-card__city">
-            {trip.city}
-            <span className="trip-card__state"> - {trip.state}</span>
+            <span className="trip-card__city-line">
+              {trip.city}
+              <span className="trip-card__state"> - {trip.state}</span>
+              {isCatalao ? <HomeIcon className="trip-card__home-icon shrink-0" /> : null}
+            </span>
           </h3>
-          {showPeriod ? <p className="trip-card__period">{trip.period}</p> : null}
+          {showPeriod ? (
+            <p className="trip-card__period">{trip.period}</p>
+          ) : (
+            <p className="trip-card__period trip-card__period--spacer" aria-hidden>
+              &nbsp;
+            </p>
+          )}
         </div>
 
         <WhatsAppButton

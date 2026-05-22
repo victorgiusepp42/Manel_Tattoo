@@ -191,6 +191,16 @@ export const NEXT_CITIES = [
 
 export type TripStatus = "confirmado" | "em breve" | "votacao";
 
+/** Tom do pin no mapa (e accent nos cards). */
+export type TripPinTone = "verde" | "confirmado" | "em-breve" | "votacao";
+
+export function tripPinTone(trip: { id: string; status: TripStatus }): TripPinTone {
+  if (trip.id === "catalao") return "verde";
+  if (trip.status === "confirmado") return "confirmado";
+  if (trip.status === "votacao") return "votacao";
+  return "em-breve";
+}
+
 export type UpcomingTrip = {
   id: string;
   city: string;
