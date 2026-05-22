@@ -12,6 +12,8 @@ export const BRAND = {
   instagram: "maneltattoo_",
   studio: "hermanoss.studio",
   logo: assetUrl("manel-logo-clean.png"),
+  wordmark: assetUrl("manel-brand-wordmark.png"),
+  brandLockup: assetUrl("manel-brand-lockup.png"),
   heroArt: assetUrl("manel-hero-2024.png"),
   ogImage: assetUrl("manel-hero-2024.png"),
   aboutPhoto: assetUrl("about/manel-at-work.png"),

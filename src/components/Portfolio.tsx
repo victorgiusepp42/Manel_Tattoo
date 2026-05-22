@@ -8,30 +8,16 @@ import { SectionHeading } from "./SectionHeading";
 
 export function Portfolio() {
   const gridRef = useRef<HTMLDivElement>(null);
-  const portfolioTitleRef = useFitOneLine<HTMLHeadingElement>({ minPx: 14, maxPx: 36 });
+  const portfolioTitleRef = useFitOneLine<HTMLHeadingElement>({
+    minPx: 14,
+    maxPx: 36,
+    widthRef: gridRef,
+    reserveSibling: ".portfolio-intro__icon",
+  });
 
   return (
     <section id="portfolio" className="section-panel py-16 md:py-20 section-enter">
       <div className="mx-auto max-w-6xl">
-        <div className="portfolio-intro px-5">
-          <div className="portfolio-intro__title-wrap">
-            <SectionHeading
-              ref={portfolioTitleRef}
-              line1="Amostra"
-              line2="Portfólio"
-              layout="inline"
-              nowrap
-              className="portfolio-intro__title"
-            />
-            <TattooMachineIcon className="portfolio-intro__icon shrink-0" />
-          </div>
-
-        </div>
-
-        <div className="portfolio-styles-block px-5">
-          <PortfolioStylesLine widthRef={gridRef} />
-        </div>
-
         <div ref={gridRef} className="portfolio-grid px-5">
           {PORTFOLIO_GALLERY.map((photo) => (
             <article key={photo.id} id={`portfolio-photo-${photo.index}`} className="portfolio-grid__item">
@@ -62,6 +48,24 @@ export function Portfolio() {
               </div>
             </article>
           ))}
+        </div>
+
+        <div className="portfolio-below-grid px-5">
+          <div className="portfolio-intro__title-wrap">
+            <SectionHeading
+              ref={portfolioTitleRef}
+              line1="Amostra"
+              line2="Portfólio"
+              layout="inline"
+              nowrap
+              className="portfolio-intro__title"
+            />
+            <TattooMachineIcon className="portfolio-intro__icon shrink-0" />
+          </div>
+
+          <div className="portfolio-styles-block">
+            <PortfolioStylesLine widthRef={gridRef} />
+          </div>
         </div>
       </div>
     </section>

@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import { Artist } from "./components/Artist";
+import { ScrollToHero } from "./components/ScrollToHero";
 import { BrandBackground } from "./components/BrandBackground";
 import { Footer } from "./components/Footer";
 import { Hero } from "./components/Hero";
@@ -26,6 +27,7 @@ function HomePage() {
 export default function App() {
   return (
     <>
+      <ScrollToHero />
       <BrandBackground />
       <Ticker />
       <Routes>

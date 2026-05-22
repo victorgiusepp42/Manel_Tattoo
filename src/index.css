@@ -130,32 +130,35 @@ body::after {
   text-shadow: none;
 }
 
-/* Hero: nome quase encostando na logo (referência 3º print) */
-.hero-brand-cluster {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 0;
+/* Logo oficial — 100% opaco, cores vivas (sem transparência) */
+.brand-lockup-image,
+.hero-brand-lockup {
+  opacity: 1;
+  margin: 0 auto;
+  overflow: visible;
+  image-rendering: auto;
+  filter: brightness(1.14) contrast(1.1) saturate(1.2)
+    drop-shadow(0 8px 22px rgba(0, 0, 0, 0.55));
 }
 
-.hero-brand-cluster .logo-blend {
-  object-position: center 94%;
-  margin-bottom: -3.25rem;
+.hero__content-top .hero-brand-lockup {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: min(100%, 30.36rem);
+  max-height: min(100%, 45.54dvh, 25.3rem);
+  margin-inline: auto;
+  object-fit: contain;
+  object-position: center center;
 }
 
-.hero-brand-cluster__title {
-  margin-top: -2rem;
-  line-height: 0.72;
+.site-footer__lockup {
+  filter: brightness(1.1) contrast(1.08) saturate(1.15)
+    drop-shadow(0 4px 12px rgba(0, 0, 0, 0.45));
 }
 
-@media (min-width: 768px) {
-  .hero-brand-cluster .logo-blend {
-    margin-bottom: -4.25rem;
-  }
-
-  .hero-brand-cluster__title {
-    margin-top: -2.5rem;
-  }
+.site-footer__lockup {
+  margin-inline: auto;
 }
 
 .brand-title {
@@ -425,18 +428,17 @@ body::after {
   background: rgba(10, 10, 10, 0.5);
 }
 
-.portfolio-intro {
-  container-type: inline-size;
+.portfolio-below-grid {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: clamp(1.15rem, 3.5vh, 1.65rem);
-  margin-bottom: clamp(0.65rem, 2vh, 1rem);
+  gap: clamp(0.75rem, 2.2vh, 1.1rem);
+  width: 100%;
+  margin-top: clamp(0.85rem, 2.5vw, 1.35rem);
 }
 
 .portfolio-styles-block {
   width: 100%;
-  margin-bottom: clamp(0.5rem, 1.5vh, 0.85rem);
   overflow: hidden;
 }
 
@@ -543,12 +545,12 @@ body::after {
 
 .portfolio-grid__cell {
   position: relative;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 4 / 4.35;
   overflow: hidden;
   border-radius: 12px;
   padding: 0;
   cursor: pointer;
-  touch-action: pan-y;
+  touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
   user-select: none;
@@ -571,15 +573,63 @@ body::after {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scale(1);
-  transform-origin: center center;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform;
   pointer-events: none;
 }
 
-.portfolio-grid__cell--zoom .portfolio-grid__img {
-  transform: scale(2);
+/* Ampliar enquanto pressiona — zoom gradual */
+.portfolio-peek {
+  --portfolio-peek-ms: 620ms;
+  --portfolio-peek-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(0.75rem, 4vw, 1.5rem);
+  background: rgba(0, 0, 0, 0);
+  opacity: 0;
+  touch-action: none;
+  cursor: zoom-out;
+  transition:
+    opacity var(--portfolio-peek-ms) var(--portfolio-peek-ease),
+    background-color var(--portfolio-peek-ms) var(--portfolio-peek-ease);
+}
+
+.portfolio-peek--active {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.88);
+}
+
+.portfolio-peek__img {
+  display: block;
+  max-width: min(96vw, 42rem);
+  max-height: min(88dvh, 52rem);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.65);
+  pointer-events: none;
+  user-select: none;
+  transform: scale(0.72);
+  opacity: 0.35;
+  transition:
+    transform calc(var(--portfolio-peek-ms) * 1.08) var(--portfolio-peek-ease),
+    opacity var(--portfolio-peek-ms) ease-out;
+  will-change: transform, opacity;
+}
+
+.portfolio-peek--active .portfolio-peek__img {
+  transform: scale(1);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-peek,
+  .portfolio-peek__img {
+    transition: none;
+  }
 }
 
 .portfolio-carousel__dots {
@@ -729,12 +779,16 @@ body::after {
 
 /* ── Hero FIX 05 ── */
 .hero {
+  --hero-scroll-block: clamp(3.35rem, 9.5vh, 4.75rem);
   isolation: isolate;
   box-sizing: border-box;
-  display: flex;
+  display: grid;
+  height: 100dvh;
+  max-height: 100dvh;
   min-height: 100dvh;
-  flex-direction: column;
+  grid-template-rows: minmax(0, 1fr) var(--hero-scroll-block);
   padding-top: var(--site-chrome-h);
+  overflow: hidden;
   background: transparent;
 }
 
@@ -743,49 +797,69 @@ body::after {
   box-sizing: border-box;
   width: 100%;
   min-height: 0;
-  flex: 1;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  overflow-x: clip;
-  overflow-y: visible;
-  padding: 0.5rem clamp(0.65rem, 4vw, 1.25rem) 3.5rem;
+  overflow: hidden;
+  padding: clamp(0.2rem, 1.2vh, 0.45rem) clamp(0.65rem, 4vw, 1.25rem) 0;
 }
 
-/* Logo + título + CTAs — centralizado (scale só no bloco superior, não nos botões) */
+/* Logo + CTAs + tagline — tudo dentro do 100dvh */
 .hero__content {
   display: flex;
   box-sizing: border-box;
   width: 100%;
   max-width: 100%;
+  height: 100%;
+  min-height: 0;
+  max-height: 100%;
+  flex: 1 1 auto;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: clamp(0.3rem, 1.2vh, 0.55rem);
   padding-inline: clamp(0.75rem, 4.5vw, 1.5rem);
-  transform: translateY(-1.75vh);
-  transform-origin: center center;
+  margin-inline: auto;
+  overflow: hidden;
 }
 
 .hero__content-top {
   display: flex;
   width: 100%;
-  max-width: min(100%, 36rem);
+  max-width: min(100%, 40.48rem);
+  min-height: 0;
+  flex: 1 1 auto;
   flex-direction: column;
   align-items: center;
-  transform-origin: center center;
+  justify-content: center;
+  max-height: min(56dvh, calc(100% - 6.5rem));
+  overflow: hidden;
 }
 
-@media (min-width: 640px) and (min-height: 500px) {
-  .hero__content-top {
-    transform: scale(1.06);
-    /* Compensate visual scale so tagline doesn't overlap */
-    margin-bottom: 4%;
+@media (max-height: 720px) {
+  .hero {
+    --hero-scroll-block: clamp(3rem, 8.5vh, 4.25rem);
+  }
+
+  .hero__content-top .hero-brand-lockup {
+    max-width: min(100%, 26.57rem);
+    max-height: min(100%, 37.95dvh, 21.51rem);
   }
 }
 
-@media (min-width: 900px) and (min-height: 600px) {
+@media (max-height: 560px) and (orientation: landscape) {
+  .hero {
+    --hero-scroll-block: clamp(2.65rem, 8vh, 3.5rem);
+  }
+
   .hero__content-top {
-    transform: scale(1.12);
-    margin-bottom: 8%;
+    max-height: min(48dvh, calc(100% - 5.5rem));
+  }
+
+  .hero__content-top .hero-brand-lockup {
+    max-width: min(100%, 22.77rem);
+    max-height: min(100%, 32.89dvh, 17.71rem);
   }
 }
 
@@ -793,10 +867,11 @@ body::after {
   container-type: inline-size;
   display: flex;
   width: 100%;
-  max-width: min(100%, 36rem);
+  max-width: min(100%, 40rem);
+  flex: 0 0 auto;
   flex-direction: column;
   align-items: center;
-  margin-top: clamp(0.65rem, 2.25vh, 1rem);
+  margin-top: 0;
 }
 
 .hero__tagline-line {
@@ -819,10 +894,11 @@ body::after {
   box-sizing: border-box;
   width: 100%;
   max-width: min(100%, 40rem);
+  flex: 0 0 auto;
   flex-direction: row;
   align-items: stretch;
   gap: clamp(0.25rem, 1.2vw, 0.55rem);
-  margin-top: clamp(0.5rem, 2.25vh, 1rem);
+  margin-top: 0;
 }
 
 /* Landscape phone: compress vertical spacing */
@@ -845,7 +921,7 @@ body::after {
 .hero__cta {
   flex: 1 1 0;
   min-width: 0;
-  min-height: clamp(40px, 11vw, 48px);
+  min-height: clamp(34px, 9vw, 42px);
   padding: 0.5rem clamp(0.25rem, 1.5vw, 0.75rem);
   font-size: clamp(0.45rem, 2.15vw, 0.82rem);
   letter-spacing: clamp(0.03em, 0.25vw, 0.08em);
@@ -929,11 +1005,36 @@ body::after {
 }
 
 .hero__scroll {
-  margin-bottom: clamp(1.5rem, 4vh, 2.75rem);
-  transform: translateY(-1.25rem);
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+  max-height: var(--hero-scroll-block);
+  min-height: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.12rem;
+  align-self: center;
+  justify-self: center;
+  margin: 0;
+  padding: 0 0 max(0.4rem, env(safe-area-inset-bottom, 0px));
+  overflow: hidden;
 }
 
-.hero__scroll svg {
+.hero__scroll-label {
+  flex-shrink: 0;
+  font-family: var(--font-condensed);
+  font-size: clamp(0.88rem, 3.2vw, 1.08rem);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.hero__scroll-icon {
+  flex-shrink: 0;
+  width: clamp(22px, 6vw, 28px);
+  height: clamp(22px, 6vw, 28px);
   animation: bounce-soft 2.2s ease-in-out infinite;
 }
 
@@ -943,7 +1044,7 @@ body::after {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(6px);
+    transform: translateY(4px);
   }
 }
 

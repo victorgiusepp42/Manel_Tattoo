@@ -1,36 +1,30 @@
+import { useRef } from "react";
 import { useFitOneLine } from "../hooks/useFitOneLine";
-import { BrandTitle } from "./BrandTitle";
+import { BrandLockupImage } from "./BrandLockupImage";
 import { InstagramButton } from "./InstagramButton";
-import { Logo } from "./Logo";
 import { WhatsAppButton } from "./WhatsAppButton";
 import { TattooMachineIcon } from "./icons/TattooMachineIcon";
 
 export function Hero() {
-  const taglinePrimaryRef = useFitOneLine<HTMLParagraphElement>({ minPx: 7, maxPx: 18 });
+  const actionsRef = useRef<HTMLDivElement>(null);
+  const taglinePrimaryRef = useFitOneLine<HTMLParagraphElement>({
+    minPx: 7,
+    maxPx: 18,
+    widthRef: actionsRef,
+  });
+
   return (
     <section
       id="inicio"
-      className="hero relative flex min-h-[100dvh] flex-col overflow-x-clip pb-6"
+      className="hero relative flex flex-col overflow-hidden"
     >
       <div className="hero__inner relative z-10 mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center text-center">
         <div className="hero__content">
           <div className="hero__content-top">
-            <div className="hero-brand-cluster">
-              <Logo size="hero" className="logo-tone-original" />
-              <BrandTitle size="hero" className="hero-brand-cluster__title" />
-            </div>
+            <BrandLockupImage size="hero" className="hero-brand-lockup" />
           </div>
 
-          <div className="hero__taglines">
-            <p
-              ref={taglinePrimaryRef}
-              className="hero__tagline-line hero__tagline-line--primary text-muted"
-            >
-              Tatuagem autoral com semanas dedicadas na sua cidade.
-            </p>
-          </div>
-
-          <div className="hero__actions">
+          <div ref={actionsRef} className="hero__actions">
             <InstagramButton className="hero__cta hero__cta--instagram btn-instagram--compact">
               Instagram
             </InstagramButton>
@@ -42,16 +36,25 @@ export function Hero() {
               <span className="hero__cta-portfolio">Portfólio</span>
             </a>
           </div>
+
+          <div className="hero__taglines">
+            <p
+              ref={taglinePrimaryRef}
+              className="hero__tagline-line hero__tagline-line--primary text-muted"
+            >
+              Tatuagem autoral com semanas dedicadas na sua cidade.
+            </p>
+          </div>
         </div>
       </div>
 
       <a
         href="#portfolio"
-        className="hero__scroll relative z-10 mx-auto mt-auto flex min-h-[44px] flex-col items-center gap-0.5 text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted transition hover:text-red-light"
+        className="hero__scroll relative z-10 text-muted transition hover:text-red-light"
         aria-label="Rolar para portfólio"
       >
-        <span>Portfólio</span>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <span className="hero__scroll-label">Portfólio</span>
+        <svg className="hero__scroll-icon" viewBox="0 0 24 24" fill="none" aria-hidden>
           <path
             d="M12 5v14M6 13l6 6 6-6"
             stroke="currentColor"
