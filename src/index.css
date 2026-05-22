@@ -931,7 +931,7 @@ body::after {
 }
 
 .hero__cluster {
-  --hero-cta-height: clamp(26px, 6.75vw, 32px);
+  --hero-cta-height: clamp(20px, 5.1vw, 24px);
   display: flex;
   width: 100%;
   max-width: min(100%, 40.48rem);
@@ -945,6 +945,12 @@ body::after {
 
 .hero__cluster .hero-brand-lockup {
   flex: 0 0 auto;
+  margin-bottom: 0;
+}
+
+/* Espaço TATTOO → botões = altura exata do botão (mesma variável) */
+.hero__cluster .hero-brand-lockup + .hero__actions {
+  margin-top: var(--hero-cta-height);
 }
 
 @media (max-height: 720px) {
@@ -1015,19 +1021,19 @@ body::after {
   flex-direction: row;
   align-items: stretch;
   gap: clamp(0.25rem, 1.2vw, 0.55rem);
-  margin-top: var(--hero-cta-height, clamp(26px, 6.75vw, 32px));
+  margin-top: 0;
 }
 
 /* Landscape phone: compress vertical spacing */
 @media (max-height: 500px) and (orientation: landscape) {
-  .hero__actions {
-    margin-top: 0.35rem;
+  .hero__cluster .hero-brand-lockup + .hero__actions {
+    margin-top: var(--hero-cta-height);
   }
 
-  .hero__cta {
-    min-height: 27px;
-    padding-top: 0.22rem;
-    padding-bottom: 0.22rem;
+  .hero__actions .hero__cta {
+    min-height: 20px;
+    height: 20px;
+    max-height: 20px;
   }
 
   .hero__taglines {
@@ -1035,16 +1041,21 @@ body::after {
   }
 }
 
-.hero__cta {
+.hero__actions .hero__cta,
+.hero__actions .btn.hero__cta {
   flex: 1 1 0;
   min-width: 0;
-  min-height: var(--hero-cta-height, clamp(26px, 6.75vw, 32px));
-  padding: 0.38rem clamp(0.25rem, 1.5vw, 0.75rem);
+  box-sizing: border-box;
+  min-height: var(--hero-cta-height);
+  height: var(--hero-cta-height);
+  max-height: var(--hero-cta-height);
+  padding-block: 0;
+  padding-inline: clamp(0.25rem, 1.5vw, 0.75rem);
   font-family: var(--font-manel);
   font-weight: 400;
   font-size: clamp(0.45rem, 2.15vw, 0.82rem);
   letter-spacing: clamp(0.04em, 0.25vw, 0.1em);
-  line-height: 1.15;
+  line-height: 1;
   text-align: center;
   white-space: nowrap;
   border: none;
@@ -1074,9 +1085,17 @@ body::after {
     gap: 0.28rem;
   }
 
-  .hero__cta {
-    min-height: 26px;
-    padding: 0.3rem clamp(0.32rem, 2.4vw, 0.55rem);
+  .hero__cluster .hero-brand-lockup + .hero__actions {
+    margin-top: var(--hero-cta-height);
+  }
+
+  .hero__actions .hero__cta,
+  .hero__actions .btn.hero__cta {
+    min-height: var(--hero-cta-height);
+    height: var(--hero-cta-height);
+    max-height: var(--hero-cta-height);
+    padding-block: 0;
+    padding-inline: clamp(0.32rem, 2.4vw, 0.55rem);
     font-size: clamp(0.42rem, 2.35vw, 0.72rem);
   }
 
