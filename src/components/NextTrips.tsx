@@ -1,7 +1,6 @@
 import { UPCOMING_TRIPS } from "../data/site";
 import { BrazilTripMap } from "./BrazilTripMap";
 import { SectionHeading } from "./SectionHeading";
-import { TravelCalendar } from "./TravelCalendar";
 import { TripCard } from "./TripCard";
 
 export function NextTrips() {
@@ -10,8 +9,8 @@ export function NextTrips() {
       <div className="mx-auto max-w-6xl px-5">
         <SectionHeading line1="Próximas" line2="Viagens" layout="inline" className="mb-8" />
 
-        <div className="trips-layout">
-          <TravelCalendar trips={UPCOMING_TRIPS} />
+        <div className="trips-stack">
+          <BrazilTripMap trips={UPCOMING_TRIPS} />
           <ul className="trips-list">
             {UPCOMING_TRIPS.map((trip) => (
               <li key={trip.id}>
@@ -20,8 +19,6 @@ export function NextTrips() {
             ))}
           </ul>
         </div>
-
-        <BrazilTripMap trips={UPCOMING_TRIPS} />
       </div>
     </section>
   );

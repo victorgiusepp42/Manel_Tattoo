@@ -1,5 +1,5 @@
 import type { UpcomingTrip } from "../data/site";
-import { MAP_VIEWBOX, tripMapPin } from "../lib/brazilMapCoords";
+import { MAP_VIEWBOX, tripMapPin, type MapPinCity } from "../lib/brazilMapCoords";
 
 type Props = {
   trips: readonly UpcomingTrip[];
@@ -16,29 +16,38 @@ export function BrazilTripMap({ trips }: Props) {
       >
         <image href={`${import.meta.env.BASE_URL}brazil-map.svg`} width={MAP_VIEWBOX.w} height={MAP_VIEWBOX.h} />
         {trips.map((trip) => {
-          const { x, y } = tripMapPin(trip.id as "sp" | "rj" | "goiania" | "brasilia");
+          const { x, y } = tripMapPin(trip.id as MapPinCity);
+          const pinTone =
+            trip.id === "catalao" ? "verde" : trip.status.replace(" ", "-");
           return (
             <g
               key={trip.id}
-              className={`brazil-map__pin brazil-map__pin--${trip.status.replace(" ", "-")}`}
+              className={`brazil-map__pin brazil-map__pin--${pinTone}`}
               transform={`translate(${x} ${y})`}
             >
-              <circle className="brazil-map__pin-glow" r="14" />
-              <circle className="brazil-map__pin-dot" r="5.5" />
+              <circle
+                className="brazil-map__pin-glow"
+                r={trip.id === "catalao" ? 17 : 14}
+              />
+              <circle className="brazil-map__pin-dot" r={trip.id === "catalao" ? 6.5 : 5.5} />
             </g>
           );
         })}
       </svg>
       <ul className="brazil-map__legend">
-        {trips.map((trip) => (
+        {trips.map((trip) => {
+          const pinTone =
+            trip.id === "catalao" ? "verde" : trip.status.replace(" ", "-");
+          return (
           <li key={trip.id}>
             <span
-              className={`brazil-map__legend-dot brazil-map__legend-dot--${trip.status.replace(" ", "-")}`}
+              className={`brazil-map__legend-dot brazil-map__legend-dot--${pinTone}`}
               aria-hidden
             />
-            {trip.city}, {trip.state}
+            {trip.city} - {trip.state}
           </li>
-        ))}
+          );
+        })}
       </ul>
     </div>
   );

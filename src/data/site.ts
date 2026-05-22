@@ -200,14 +200,20 @@ export type UpcomingTrip = {
   endDate?: string;
   period: string;
   status: TripStatus;
-  studio: string;
-  address: string;
   /** Pin no viewBox do mapa SVG (613×639). */
   mapX: number;
   mapY: number;
 };
 
 export const UPCOMING_TRIPS: UpcomingTrip[] = [
+  {
+    id: "catalao",
+    city: "Catalão",
+    state: "GO",
+    period: "",
+    status: "em breve",
+    ...mapPin("catalao"),
+  },
   {
     id: "sp",
     city: "São Paulo",
@@ -216,38 +222,40 @@ export const UPCOMING_TRIPS: UpcomingTrip[] = [
     endDate: "2026-05-29",
     period: "25/05 a 29/05",
     status: "confirmado",
-    studio: "Studio XXXXX",
-    address: "Rua XXXXX, Vila Matilde — São Paulo — SP",
     ...mapPin("sp"),
   },
   {
     id: "rj",
     city: "Rio de Janeiro",
     state: "RJ",
-    period: "XX/XX a XX/XX",
-    status: "em breve",
-    studio: "Studio XXXXX",
-    address: "Rua XXXXX XXXXXX — Rio de Janeiro — RJ",
+    startDate: "2026-06-03",
+    endDate: "2026-06-15",
+    period: "03/06 a 15/06",
+    status: "confirmado",
     ...mapPin("rj"),
+  },
+  {
+    id: "uberlandia",
+    city: "Uberlândia",
+    state: "MG",
+    period: "",
+    status: "em breve",
+    ...mapPin("uberlandia"),
   },
   {
     id: "goiania",
     city: "Goiânia",
     state: "GO",
-    period: "XX/XX a XX/XX",
+    period: "",
     status: "em breve",
-    studio: "Studio XXXXX",
-    address: "Rua XXXXX XXXXXX — Goiânia — GO",
     ...mapPin("goiania"),
   },
   {
     id: "brasilia",
     city: "Brasília",
     state: "DF",
-    period: "XX/XX a XX/XX",
+    period: "",
     status: "em breve",
-    studio: "Studio XXXXX",
-    address: "Rua XXXXX XXXXXX — Brasília — DF",
     ...mapPin("brasilia"),
   },
 ];
@@ -292,6 +300,11 @@ export function instagramUrl(_text?: string) {
 
 export function whatsappUrl(text: string) {
   return `https://wa.me/${BRAND.whatsapp}?text=${encodeURIComponent(text)}`;
+}
+
+export function tripAgendarMessage(city: string, state: string, period?: string) {
+  const dates = period?.trim() ? `\nPeríodo: ${period}` : "";
+  return `Oi! Vi o site da Manel Tattoo e quero agendar em ${city} - ${state}.${dates}`;
 }
 
 export function dmQuoteMessage(style: string, size: string, region: string) {

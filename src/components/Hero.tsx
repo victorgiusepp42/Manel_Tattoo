@@ -32,8 +32,7 @@ export function Hero() {
 
           <div className="hero__actions">
             <InstagramButton className="hero__cta hero__cta--instagram btn-instagram--compact">
-              <span className="hero__cta-label hero__cta-label--long">Chamar no Instagram</span>
-              <span className="hero__cta-label hero__cta-label--short">Instagram</span>
+              Instagram
             </InstagramButton>
             <WhatsAppButton className="hero__cta hero__cta--whatsapp">
               WHATSAPP

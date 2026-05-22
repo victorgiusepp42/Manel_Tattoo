@@ -9,6 +9,8 @@ export const MAP_VIEWBOX = { w: 613, h: 639 } as const;
 export const MAP_PINS = {
   sp: { x: 435, y: 458 },
   rj: { x: 488, y: 442 },
+  catalao: { x: 402, y: 366 },
+  uberlandia: { x: 402, y: 384 },
   goiania: { x: 372, y: 335 },
   brasilia: { x: 412, y: 332 },
 } as const;

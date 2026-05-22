@@ -1460,21 +1460,17 @@ body::after {
   display: none;
 }
 
-/* ── Próximas viagens ── */
-.trips-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 45fr) minmax(0, 55fr);
-  gap: clamp(0.45rem, 1.8vw, 1.5rem);
-  align-items: start;
+/* ── Próximas viagens: mapa acima, cards abaixo (90% da largura) ── */
+.trips-stack {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.75rem, 2vw, 1.25rem);
+  width: 90%;
+  max-width: 90%;
+  margin-inline: auto;
 }
 
-@media (max-width: 380px) {
-  .trips-layout {
-    grid-template-columns: 1fr;
-  }
-}
-
-.trips-layout > * {
+.trips-stack > * {
   min-width: 0;
 }
 
@@ -1592,72 +1588,136 @@ body::after {
   background: rgba(8, 8, 8, 0.55);
 }
 
-.trip-card__header {
+.trip-card--featured {
+  border: 1px solid rgba(37, 211, 102, 0.35);
+  background: rgba(12, 22, 16, 0.62);
+  box-shadow:
+    0 0 0 1px rgba(37, 211, 102, 0.08),
+    0 0 18px rgba(37, 211, 102, 0.12);
+}
+
+.trip-card--featured .trip-card__city {
+  font-size: clamp(1.12rem, 3.6vw, 1.62rem);
+}
+
+.trip-card--featured .trip-card__state {
+  color: rgba(74, 222, 128, 0.95);
+}
+
+.trip-card__layout {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0.5rem 0.65rem;
+}
+
+.trip-card__main {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.35rem 0.75rem;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 .trip-card__city {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(0.78rem, 2.4vw, 1.2rem);
+  font-size: clamp(1.05rem, 3.4vw, 1.55rem);
   font-weight: 800;
+  line-height: 1.1;
   color: var(--color-cream);
 }
 
 .trip-card__state {
+  font-size: 0.92em;
   color: var(--color-red-light);
 }
 
 .trip-card__status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 999px;
   font-family: var(--font-condensed);
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Confirmado ao lado do nome — 50% do tamanho do pill padrão */
+.trip-card__status--inline {
+  padding: 0.14em 0.32em;
+  font-size: 0.5em;
+  vertical-align: middle;
 }
 
 .trip-card__status--confirmado {
-  color: rgba(110, 181, 255, 0.95);
+  color: #e8f4ff;
+  background: rgba(59, 130, 246, 0.28);
+  box-shadow: 0 0 12px rgba(110, 181, 255, 0.25);
 }
 
 .trip-card__status--em-breve {
-  color: var(--color-amber);
+  color: #fff4e0;
+  background: rgba(251, 146, 60, 0.22);
+}
+
+.trip-card__status--votacao {
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Agende aqui — pill verde translúcido (mesma lógica do WhatsApp) */
+.trip-card__agendar.btn-whatsapp {
+  min-height: 1.85em;
+  gap: 0.35em;
+  padding: 0.28em 0.65em;
+  border-radius: 999px;
+  font-size: clamp(0.72rem, 2.2vw, 0.95rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: #e8fff0;
+  background: rgba(37, 211, 102, 0.28);
+  box-shadow: 0 0 12px rgba(37, 211, 102, 0.22);
+}
+
+.trip-card__agendar-hand {
+  width: 1.15em;
+  height: auto;
+  max-height: 1.15em;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.trip-card__agendar.btn-whatsapp:hover {
+  transform: none;
+  color: #f0fff5;
+  background: rgba(37, 211, 102, 0.38);
+  box-shadow: 0 0 14px rgba(37, 211, 102, 0.32);
+  filter: none;
+}
+
+.trip-card__agendar.btn-whatsapp:focus-visible {
+  outline: 2px solid rgba(74, 222, 128, 0.85);
+  outline-offset: 2px;
 }
 
 .trip-card__period {
-  margin: 0.25rem 0 0;
+  margin: 0;
   font-family: var(--font-condensed);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.trip-card__studio {
-  margin: 0.35rem 0 0;
-  font-family: var(--font-condensed);
-  font-size: 0.75rem;
+  font-size: clamp(0.92rem, 2.8vw, 1.12rem);
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.72);
 }
 
-.trip-card__address {
-  margin: 0.25rem 0 0;
-  font-size: 0.8rem;
-  line-height: 1.45;
-  color: var(--color-muted);
-}
-
 .brazil-map {
-  margin-top: clamp(1.25rem, 3vw, 2rem);
+  margin-top: 0;
   padding: clamp(0.85rem, 2vw, 1.25rem);
   background: rgba(8, 8, 8, 0.55);
 }
@@ -1694,6 +1754,15 @@ body::after {
   fill: rgba(251, 191, 36, 0.18);
 }
 
+.brazil-map__pin--verde .brazil-map__pin-dot {
+  fill: rgba(37, 211, 102, 0.95);
+  stroke: rgba(255, 255, 255, 0.85);
+}
+
+.brazil-map__pin--verde .brazil-map__pin-glow {
+  fill: rgba(37, 211, 102, 0.24);
+}
+
 .brazil-map__legend {
   display: flex;
   flex-wrap: wrap;
@@ -1722,4 +1791,8 @@ body::after {
 
 .brazil-map__legend-dot--em-breve {
   background: rgba(251, 191, 36, 0.95);
+}
+
+.brazil-map__legend-dot--verde {
+  background: rgba(37, 211, 102, 0.95);
 }
