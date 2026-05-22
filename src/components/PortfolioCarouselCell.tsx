@@ -22,6 +22,7 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
   const pointerIdRef = useRef<number | null>(null);
   const cellRef = useRef<HTMLButtonElement>(null);
   const endedRef = useRef(false);
+  const zoomOpenedRef = useRef(false);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const zoomTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -77,7 +78,8 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
 
     const duration = Date.now() - pressStartRef.current;
 
-    if (peek) {
+    if (zoomOpenedRef.current) {
+      zoomOpenedRef.current = false;
       setPeekActive(false);
       if (closeTimerRef.current !== null) clearTimeout(closeTimerRef.current);
       closeTimerRef.current = setTimeout(() => {
@@ -90,12 +92,13 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
     if (duration > 0 && duration < TAP_MS && n > 1) {
       goNext();
     }
-  }, [clearZoomTimer, goNext, n, peek]);
+  }, [clearZoomTimer, goNext, n]);
 
   const onPointerDown = useCallback(
     (e: React.PointerEvent<HTMLButtonElement>) => {
       if (e.button !== 0) return;
       endedRef.current = false;
+      zoomOpenedRef.current = false;
       e.currentTarget.setPointerCapture(e.pointerId);
       pointerIdRef.current = e.pointerId;
       if (closeTimerRef.current !== null) {
@@ -103,8 +106,14 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
         closeTimerRef.current = null;
       }
       clearZoomTimer();
+      setPeek(false);
+      setPeekActive(false);
       pressStartRef.current = Date.now();
-      zoomTimerRef.current = setTimeout(() => setPeek(true), ZOOM_HOLD_MS);
+      zoomTimerRef.current = setTimeout(() => {
+        if (endedRef.current) return;
+        zoomOpenedRef.current = true;
+        setPeek(true);
+      }, ZOOM_HOLD_MS);
     },
     [clearZoomTimer],
   );
@@ -144,6 +153,8 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
             role="dialog"
             aria-modal="true"
             aria-label={`${photo.style} ampliado`}
+            onPointerUp={endPeek}
+            onPointerCancel={endPeek}
           >
             <img
               src={current.image}
