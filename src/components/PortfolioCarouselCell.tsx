@@ -3,10 +3,9 @@ import { createPortal } from "react-dom";
 import { cn } from "../lib/cn";
 import type { GalleryPhoto, GallerySlide } from "../data/site";
 
-/** Toque rápido (< 1s) troca de foto; segurar 1s abre o zoom. */
-const TAP_MS = 1000;
-const ZOOM_HOLD_MS = 1000;
-/** Deve coincidir com a duração em CSS (--portfolio-peek-ms). */
+/** Toque rápido (< 0,7s) troca de foto; segurar 0,7s abre o zoom. */
+const TAP_MS = 700;
+const ZOOM_HOLD_MS = 700;
 const PEEK_ANIM_MS = 620;
 
 type Props = {
@@ -19,18 +18,37 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
   const [peek, setPeek] = useState(false);
   const [peekActive, setPeekActive] = useState(false);
   const pressStartRef = useRef(0);
+  const pressActiveRef = useRef(false);
   const pointerIdRef = useRef<number | null>(null);
   const cellRef = useRef<HTMLButtonElement>(null);
-  const endedRef = useRef(false);
   const zoomOpenedRef = useRef(false);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const zoomTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const globalEndRef = useRef<(() => void) | null>(null);
 
   const clearZoomTimer = useCallback(() => {
     if (zoomTimerRef.current !== null) {
       clearTimeout(zoomTimerRef.current);
       zoomTimerRef.current = null;
     }
+  }, []);
+
+  const removeGlobalEnd = useCallback(() => {
+    const fn = globalEndRef.current;
+    if (!fn) return;
+    window.removeEventListener("pointerup", fn);
+    window.removeEventListener("pointercancel", fn);
+    globalEndRef.current = null;
+  }, []);
+
+  const closeZoom = useCallback(() => {
+    zoomOpenedRef.current = false;
+    setPeekActive(false);
+    if (closeTimerRef.current !== null) clearTimeout(closeTimerRef.current);
+    closeTimerRef.current = setTimeout(() => {
+      setPeek(false);
+      closeTimerRef.current = null;
+    }, PEEK_ANIM_MS);
   }, []);
 
   useEffect(() => {
@@ -46,10 +64,11 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
 
   useEffect(
     () => () => {
+      removeGlobalEnd();
       clearZoomTimer();
       if (closeTimerRef.current !== null) clearTimeout(closeTimerRef.current);
     },
-    [clearZoomTimer],
+    [clearZoomTimer, removeGlobalEnd],
   );
 
   const n = slides.length;
@@ -63,10 +82,10 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
     setActive(i);
   }, []);
 
-  const endPeek = useCallback(() => {
-    if (endedRef.current) return;
-    endedRef.current = true;
-
+  const endPress = useCallback(() => {
+    if (!pressActiveRef.current) return;
+    pressActiveRef.current = false;
+    removeGlobalEnd();
     clearZoomTimer();
 
     const btn = cellRef.current;
@@ -76,31 +95,27 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
     }
     pointerIdRef.current = null;
 
-    const duration = Date.now() - pressStartRef.current;
-
     if (zoomOpenedRef.current) {
-      zoomOpenedRef.current = false;
-      setPeekActive(false);
-      if (closeTimerRef.current !== null) clearTimeout(closeTimerRef.current);
-      closeTimerRef.current = setTimeout(() => {
-        setPeek(false);
-        closeTimerRef.current = null;
-      }, PEEK_ANIM_MS);
+      closeZoom();
       return;
     }
 
+    const duration = Date.now() - pressStartRef.current;
     if (duration > 0 && duration < TAP_MS && n > 1) {
       goNext();
     }
-  }, [clearZoomTimer, goNext, n]);
+  }, [clearZoomTimer, closeZoom, goNext, n, removeGlobalEnd]);
 
   const onPointerDown = useCallback(
     (e: React.PointerEvent<HTMLButtonElement>) => {
-      if (e.button !== 0) return;
-      endedRef.current = false;
+      if (e.button !== 0 || pressActiveRef.current) return;
+
+      pressActiveRef.current = true;
       zoomOpenedRef.current = false;
-      e.currentTarget.setPointerCapture(e.pointerId);
+      pressStartRef.current = Date.now();
       pointerIdRef.current = e.pointerId;
+      e.currentTarget.setPointerCapture(e.pointerId);
+
       if (closeTimerRef.current !== null) {
         clearTimeout(closeTimerRef.current);
         closeTimerRef.current = null;
@@ -108,14 +123,20 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
       clearZoomTimer();
       setPeek(false);
       setPeekActive(false);
-      pressStartRef.current = Date.now();
+
+      removeGlobalEnd();
+      const onGlobalEnd = () => endPress();
+      globalEndRef.current = onGlobalEnd;
+      window.addEventListener("pointerup", onGlobalEnd);
+      window.addEventListener("pointercancel", onGlobalEnd);
+
       zoomTimerRef.current = setTimeout(() => {
-        if (endedRef.current) return;
+        if (!pressActiveRef.current) return;
         zoomOpenedRef.current = true;
         setPeek(true);
       }, ZOOM_HOLD_MS);
     },
-    [clearZoomTimer],
+    [clearZoomTimer, endPress, removeGlobalEnd],
   );
 
   const current = slides[active]!;
@@ -127,13 +148,11 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
         type="button"
         className="portfolio-grid__cell card-surface"
         onPointerDown={onPointerDown}
-        onPointerUp={endPeek}
-        onPointerCancel={endPeek}
         onContextMenu={(e) => e.preventDefault()}
         aria-label={
           n > 1
-            ? `${photo.style}: toque rápido para próxima foto, segure 1 segundo para ampliar (${active + 1} de ${n})`
-            : `${photo.style}: segure 1 segundo para ampliar`
+            ? `${photo.style}: toque rápido para próxima foto, segure 0,7s para ampliar (${active + 1} de ${n})`
+            : `${photo.style}: segure 0,7s para ampliar`
         }
       >
         <img
@@ -153,8 +172,8 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
             role="dialog"
             aria-modal="true"
             aria-label={`${photo.style} ampliado`}
-            onPointerUp={endPeek}
-            onPointerCancel={endPeek}
+            onPointerUp={closeZoom}
+            onPointerCancel={closeZoom}
           >
             <img
               src={current.image}
