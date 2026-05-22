@@ -57,7 +57,7 @@ export function LightParticles() {
           r: glow ? Math.random() * 2.2 + 1.4 : Math.random() * 1.4 + 0.5,
           vx: (Math.random() - 0.5) * (glow ? 0.1 : 0.2),
           vy: (Math.random() - 0.5) * (glow ? 0.1 : 0.2),
-          a: glow ? Math.random() * 0.14 + 0.32 : Math.random() * 0.16 + 0.2,
+          a: glow ? Math.random() * 0.16 + 0.38 : Math.random() * 0.18 + 0.26,
           c: COLORS[Math.floor(Math.random() * COLORS.length)]!,
           phase: Math.random() * Math.PI * 2,
           twinkle: Math.random() * 0.028 + 0.016,
@@ -70,8 +70,8 @@ export function LightParticles() {
       const haloR = p.r * (p.glow ? 4 : 2.6);
 
       const halo = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, haloR);
-      halo.addColorStop(0, `rgba(${p.c},${alpha * 0.78})`);
-      halo.addColorStop(0.35, `rgba(${p.c},${alpha * 0.32})`);
+      halo.addColorStop(0, `rgba(${p.c},${alpha * 0.92})`);
+      halo.addColorStop(0.35, `rgba(${p.c},${alpha * 0.42})`);
       halo.addColorStop(1, `rgba(${p.c},0)`);
       ctx.fillStyle = halo;
       ctx.beginPath();
@@ -80,7 +80,7 @@ export function LightParticles() {
 
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r * 0.7, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${p.c},${alpha * 0.85})`;
+      ctx.fillStyle = `rgba(${p.c},${alpha * 0.96})`;
       ctx.fill();
     };
 
@@ -101,8 +101,8 @@ export function LightParticles() {
         if (p.y < -16) p.y = canvas.height + 16;
         if (p.y > canvas.height + 16) p.y = -16;
 
-        const pulse = 0.72 + 0.28 * Math.sin(tick * p.twinkle + p.phase);
-        drawParticle(p, Math.min(0.62, p.a * pulse));
+        const pulse = 0.78 + 0.22 * Math.sin(tick * p.twinkle + p.phase);
+        drawParticle(p, Math.min(0.78, p.a * pulse));
       });
       ctx.globalCompositeOperation = "source-over";
     };
