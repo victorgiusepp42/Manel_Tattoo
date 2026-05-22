@@ -21,6 +21,7 @@ export function TripCard({ trip }: Props) {
         "trip-card card-surface",
         `trip-card--tone-${tone}`,
         isCatalao && "trip-card--catalao",
+        !showPeriod && "trip-card--no-date",
       )}
     >
       <div className="trip-card__layout">
@@ -32,13 +33,7 @@ export function TripCard({ trip }: Props) {
               {isCatalao ? <HomeIcon className="trip-card__home-icon shrink-0" /> : null}
             </span>
           </h3>
-          {showPeriod ? (
-            <p className="trip-card__period">{trip.period}</p>
-          ) : (
-            <p className="trip-card__period trip-card__period--spacer" aria-hidden>
-              &nbsp;
-            </p>
-          )}
+          {showPeriod ? <p className="trip-card__period">{trip.period}</p> : null}
         </div>
 
         <WhatsAppButton

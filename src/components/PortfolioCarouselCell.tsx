@@ -1,5 +1,8 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
+import { cn } from "../lib/cn";
 import type { GalleryPhoto, GallerySlide } from "../data/site";
+
+const HOLD_MS = 2000;
 
 type Props = {
   photo: GalleryPhoto;
@@ -8,7 +11,18 @@ type Props = {
 
 export function PortfolioCarouselCell({ photo, slides }: Props) {
   const [active, setActive] = useState(0);
+  const [zoomed, setZoomed] = useState(false);
+  const holdTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const longPressRef = useRef(false);
+
   const n = slides.length;
+
+  const clearHoldTimer = useCallback(() => {
+    if (holdTimerRef.current !== null) {
+      clearTimeout(holdTimerRef.current);
+      holdTimerRef.current = null;
+    }
+  }, []);
 
   const goNext = useCallback(() => {
     if (n <= 1) return;
@@ -19,18 +33,45 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
     setActive(i);
   }, []);
 
+  const endHold = useCallback(() => {
+    clearHoldTimer();
+    setZoomed(false);
+  }, [clearHoldTimer]);
+
+  const onHoldStart = useCallback(() => {
+    longPressRef.current = false;
+    clearHoldTimer();
+    holdTimerRef.current = setTimeout(() => {
+      longPressRef.current = true;
+      setZoomed(true);
+    }, HOLD_MS);
+  }, [clearHoldTimer]);
+
+  const onCellClick = useCallback(() => {
+    if (longPressRef.current) {
+      longPressRef.current = false;
+      return;
+    }
+    goNext();
+  }, [goNext]);
+
   const current = slides[active]!;
 
   return (
     <>
       <button
         type="button"
-        className="portfolio-grid__cell card-surface"
-        onClick={goNext}
+        className={cn("portfolio-grid__cell card-surface", zoomed && "portfolio-grid__cell--zoom")}
+        onClick={onCellClick}
+        onPointerDown={onHoldStart}
+        onPointerUp={endHold}
+        onPointerCancel={endHold}
+        onPointerLeave={endHold}
+        onContextMenu={(e) => e.preventDefault()}
         aria-label={
           n > 1
-            ? `${photo.style}: próxima foto (${active + 1} de ${n})`
-            : `${photo.style}: foto`
+            ? `${photo.style}: toque para próxima foto, segure 2s para ampliar (${active + 1} de ${n})`
+            : `${photo.style}: segure 2s para ampliar`
         }
       >
         <img
@@ -39,6 +80,7 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
           className="portfolio-grid__img"
           loading="lazy"
           decoding="async"
+          draggable={false}
         />
       </button>
 
