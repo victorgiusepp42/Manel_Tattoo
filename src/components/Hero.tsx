@@ -47,7 +47,7 @@ export function Hero() {
                   ref={taglinePrimaryRef}
                   className="hero__tagline-line hero__tagline-line--primary font-manel"
                 >
-                  Tatuagem autoral com semanas dedicadas na sua cidade.
+                  Tatuagem autoral com semanas dedicadas na sua cidade
                 </p>
               </div>
             </div>

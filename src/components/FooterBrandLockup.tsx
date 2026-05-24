@@ -18,7 +18,7 @@ export function FooterBrandLockup({ className }: Props) {
         alt=""
         width={1024}
         height={1024}
-        className="footer-brand-lockup-stack__mark brand-lockup-image block h-auto w-auto max-w-full object-contain"
+        className="footer-brand-lockup-stack__mark brand-lockup-image block h-auto w-full max-w-full object-contain"
         decoding="async"
         draggable={false}
       />
