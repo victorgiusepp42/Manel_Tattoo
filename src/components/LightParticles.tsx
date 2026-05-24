@@ -104,7 +104,10 @@ export function LightParticles() {
       if (document.hidden) return;
 
       tick += 1;
-      if (!coarse && !scrollIdleRef.current) return;
+      const scrolling = !scrollIdleRef.current;
+      if (!coarse && scrolling) return;
+      /* Mobile: ~30fps durante scroll — mantém deriva sem travar o 1º gesto. */
+      if (coarse && scrolling && tick % 2 !== 0) return;
 
       particles.forEach((p) => {
         p.x += p.vx;

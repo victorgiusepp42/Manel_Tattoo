@@ -1,5 +1,6 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useFitOneLine } from "../hooks/useFitOneLine";
+import { preloadImages } from "../hooks/usePreloadImages";
 import { PORTFOLIO_GALLERY } from "../data/site";
 import { TattooMachineIcon } from "./icons/TattooMachineIcon";
 import { PortfolioCarouselCell } from "./PortfolioCarouselCell";
@@ -14,6 +15,26 @@ export function Portfolio() {
     widthRef: contentRef,
     reserveSibling: ".portfolio-intro__icon",
   });
+
+  useEffect(() => {
+    const warmUrls = PORTFOLIO_GALLERY.slice(0, 4)
+      .flatMap((photo) => (photo.slides[0] ? [photo.slides[0].image] : []));
+    if (warmUrls.length === 0) return;
+
+    const warm = () => preloadImages(warmUrls);
+    const deferId =
+      typeof window.requestIdleCallback === "function"
+        ? window.requestIdleCallback(warm, { timeout: 2200 })
+        : window.setTimeout(warm, 300);
+
+    return () => {
+      if (typeof window.cancelIdleCallback === "function") {
+        window.cancelIdleCallback(deferId as number);
+      } else {
+        clearTimeout(deferId as number);
+      }
+    };
+  }, []);
 
   return (
     <section id="portfolio" className="section-panel py-16 md:py-20 section-enter">

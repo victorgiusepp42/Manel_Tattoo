@@ -104,33 +104,19 @@ export function useSocialFloatLayout(buttonHeight: number): SocialFloatLayout {
       raf = requestAnimationFrame(sync);
     };
 
-    let bound = false;
-    const bind = () => {
-      if (bound) return;
-      bound = true;
-      window.addEventListener("scroll", onChange, { passive: true });
-      window.addEventListener("resize", onChange, { passive: true });
-      sync();
-    };
-
-    const section = document.getElementById("portfolio");
-    if (!section) return;
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) bind();
-      },
-      { rootMargin: "120% 0px 120% 0px" },
-    );
-    io.observe(section);
-
-    const onFirstScroll = () => bind();
-    window.addEventListener("scroll", onFirstScroll, { passive: true, once: true });
+    /* Liga após o 1º paint — evita custo no 1º scroll. */
+    let bootRaf = 0;
+    bootRaf = requestAnimationFrame(() => {
+      bootRaf = requestAnimationFrame(() => {
+        window.addEventListener("scroll", onChange, { passive: true });
+        window.addEventListener("resize", onChange, { passive: true });
+        onChange();
+      });
+    });
 
     return () => {
       cancelAnimationFrame(raf);
-      io.disconnect();
-      window.removeEventListener("scroll", onFirstScroll);
+      cancelAnimationFrame(bootRaf);
       window.removeEventListener("scroll", onChange);
       window.removeEventListener("resize", onChange);
     };

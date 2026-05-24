@@ -33,7 +33,26 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
 
   useEffect(() => {
     if (!inView || slides.length <= 1) return;
-    preloadImages(slideUrls);
+
+    const first = slideUrls[0];
+    if (first) preloadImages([first]);
+
+    const rest = slideUrls.slice(1);
+    if (rest.length === 0) return;
+
+    const preloadRest = () => preloadImages(rest);
+    const deferId =
+      typeof window.requestIdleCallback === "function"
+        ? window.requestIdleCallback(preloadRest, { timeout: 1800 })
+        : window.setTimeout(preloadRest, 200);
+
+    return () => {
+      if (typeof window.cancelIdleCallback === "function") {
+        window.cancelIdleCallback(deferId as number);
+      } else {
+        clearTimeout(deferId as number);
+      }
+    };
   }, [inView, slideUrls, slides.length]);
 
   const clearZoomTimer = useCallback(() => {

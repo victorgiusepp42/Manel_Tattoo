@@ -1356,8 +1356,7 @@ html.is-scrolling .ticker__track {
   /* content-visibility adia paint da 1ª secção — causa tranco no 1º scroll (iOS/Android) */
   .section-panel {
     content-visibility: visible;
-    contain-intrinsic-size: auto;
-    contain: layout style;
+    contain: none;
   }
 
   .section-enter {
