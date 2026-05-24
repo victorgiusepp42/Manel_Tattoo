@@ -23,6 +23,25 @@ export const BRAND = {
   slotsThisMonth: 3,
 } as const;
 
+export const ARTIST_CONTENT = {
+  sectionTitle: "Artista multifacetado",
+  headingLine1: "Um traço.",
+  headingLine2: "Vários mundos.",
+  introParagraphs: [
+    "Cada projeto é pensado de forma única, respeitando a ideia do cliente e a personalidade que a tatuagem precisa carregar. Mais do que seguir um único padrão, a proposta é criar peças com presença, equilíbrio estético e originalidade.",
+    "Diferentes estilos conectados pela mesma essência: tatuagens feitas com intenção, personalidade e força visual.",
+  ],
+  aboutHeadingLine1: "Sobre",
+  aboutHeadingLine2: "Manel",
+  aboutPhotoAlt: "Manel tatuando em estúdio",
+  paragraphs: [
+    "Manel Tattoo é um artista brasileiro que trabalha com tatuagem old school e projetos diversos com forte identidade visual. Seu trabalho mistura a estética clássica da tatuagem tradicional com referências da cultura brasileira, arte popular e elementos contemporâneos.",
+    "Cada tatuagem é construída buscando equilíbrio entre impacto visual, composição sólida e significado. Das peças mais tradicionais às criações personalizadas, seu estilo carrega linhas marcantes, contraste forte e desenhos pensados para envelhecer bem na pele.",
+    "Manel transforma ideias em tatuagens com personalidade. Peças que contam histórias, carregam memória e permanecem vivas com o tempo.",
+    "Seu trabalho vem conquistando espaço entre clientes que procuram autenticidade, originalidade e uma tatuagem feita pra durar.",
+  ],
+} as const;
+
 export const CATEGORIES = [
   "Old School",
   "Blackwork",
