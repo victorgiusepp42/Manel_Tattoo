@@ -244,9 +244,9 @@ export const FAQ_ITEMS = [
 ];
 
 export const TESTIMONIALS = [
-  { name: "Ana R.", city: "Goiânia, GO", text: "Fui na semana que ele veio pra cá. Saí com a peça que tava na cabeça há anos.", photo: null },
-  { name: "Lucas M.", city: "Brasília, DF", text: "Traço firme, conversa boa e zero clima de pressa. Já tô planejando a próxima.", photo: null },
-  { name: "Juliana P.", city: "Catalão, GO", text: "Old school colorido do jeito que eu queria. O antes/depois do cover falou por si.", photo: null },
+  { name: "Ana R.", city: "Goiânia, GO", text: "Fui na semana que ele veio pra cá. Saí com a peça que tava na cabeça há anos." },
+  { name: "Lucas M.", city: "Brasília, DF", text: "Traço firme, conversa boa e zero clima de pressa. Já tô planejando a próxima." },
+  { name: "Juliana P.", city: "Catalão, GO", text: "Old school colorido do jeito que eu queria. O antes/depois do cover falou por si." },
 ];
 
 export const TICKER_PHRASES = [
