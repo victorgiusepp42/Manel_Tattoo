@@ -68,9 +68,11 @@ body {
   min-height: 100%;
 }
 
-/* Altura fixa: só o ticker */
+/* Altura fixa: ticker fixo no topo */
 :root {
   --site-chrome-h: 34px;
+  --site-chrome-top: env(safe-area-inset-top, 0px);
+  --site-chrome-offset: calc(var(--site-chrome-h) + var(--site-chrome-top));
   /* Safe-area para iOS notch / home indicator */
   --safe-area-top: env(safe-area-inset-top, 0px);
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
@@ -342,7 +344,7 @@ body::after {
 
 .brand-bg__art,
 .brand-bg__veil {
-  top: var(--site-chrome-h);
+  top: var(--site-chrome-offset);
   right: 0;
   bottom: 0;
   left: 0;
@@ -403,23 +405,37 @@ body::after {
   }
 }
 
-/* ── Ticker FIX 01 ── */
+/* ── Ticker FIX 01 — fixo no topo, acima do hero ── */
 .ticker {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 601;
-  height: 34px;
+  height: var(--site-chrome-offset);
+  padding-top: var(--site-chrome-top);
+  box-sizing: border-box;
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
   background: linear-gradient(90deg, #7f1d1d, #b91c1c, #fb923c, #b91c1c, #7f1d1d);
   background-size: 300% auto;
-  animation: ticker-shine 14s linear infinite;
   border-bottom: 1px solid rgba(248, 113, 113, 0.2);
+  contain: layout style paint;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+@media (min-width: 901px) {
+  .ticker {
+    animation: ticker-shine 14s linear infinite;
+  }
 }
 
 .ticker__viewport {
   width: 100%;
+  height: var(--site-chrome-h);
   overflow: hidden;
   white-space: nowrap;
 }
@@ -428,8 +444,16 @@ body::after {
   display: inline-flex;
   flex-wrap: nowrap;
   width: max-content;
+  height: 100%;
   white-space: nowrap;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
   animation: ticker-scroll 40s linear infinite;
+}
+
+html.is-scrolling .ticker,
+html.is-scrolling .ticker__track {
+  animation-play-state: paused;
 }
 
 .ticker__item {
@@ -937,7 +961,7 @@ body::after {
   min-height: 100svh;
   min-height: 100dvh;
   flex-direction: column;
-  padding-top: var(--site-chrome-h);
+  padding-top: var(--site-chrome-offset);
   padding-bottom: 0;
   overflow: hidden;
   background: transparent;
