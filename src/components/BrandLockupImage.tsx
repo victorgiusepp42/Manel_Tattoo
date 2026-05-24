@@ -5,7 +5,7 @@ type Size = "hero" | "footer";
 
 const sizes = {
   hero: "h-auto w-auto max-w-full",
-  footer: "w-[min(58.5vw,8.25rem)] sm:w-[min(52.5vw,9.375rem)]",
+  footer: "w-[min(49.725vw,7.0125rem)] sm:w-[min(44.625vw,7.96875rem)]",
 } as const;
 
 type Props = {

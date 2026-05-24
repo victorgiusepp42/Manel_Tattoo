@@ -1,6 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "../lib/cn";
+import { useInView } from "../hooks/useInView";
+import { preloadImages } from "../hooks/usePreloadImages";
 import type { GalleryPhoto, GallerySlide } from "../data/site";
 
 /** Toque rápido (< 0,6s) troca de foto; segurar 0,6s abre o zoom. */
@@ -25,6 +27,14 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const zoomTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const globalEndRef = useRef<(() => void) | null>(null);
+
+  const inView = useInView(cellRef, { rootMargin: "320px" });
+  const slideUrls = useMemo(() => slides.map((s) => s.image), [slides]);
+
+  useEffect(() => {
+    if (!inView || slides.length <= 1) return;
+    preloadImages(slideUrls);
+  }, [inView, slideUrls, slides.length]);
 
   const clearZoomTimer = useCallback(() => {
     if (zoomTimerRef.current !== null) {
@@ -82,6 +92,11 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
     setActive(i);
   }, []);
 
+  const preloadNext = useCallback(() => {
+    if (n <= 1) return;
+    preloadImages([slides[(active + 1) % n]!.image]);
+  }, [active, n, slides]);
+
   const endPress = useCallback(() => {
     if (!pressActiveRef.current) return;
     pressActiveRef.current = false;
@@ -110,6 +125,7 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
     (e: React.PointerEvent<HTMLButtonElement>) => {
       if (e.button !== 0 || pressActiveRef.current) return;
 
+      preloadNext();
       pressActiveRef.current = true;
       zoomOpenedRef.current = false;
       pressStartRef.current = Date.now();
@@ -136,7 +152,7 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
         setPeek(true);
       }, ZOOM_HOLD_MS);
     },
-    [clearZoomTimer, endPress, removeGlobalEnd],
+    [clearZoomTimer, endPress, preloadNext, removeGlobalEnd],
   );
 
   const current = slides[active]!;
@@ -155,14 +171,22 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
             : `${photo.style}: segure 0,6s para ampliar`
         }
       >
-        <img
-          src={current.image}
-          alt=""
-          className="portfolio-grid__img"
-          loading="lazy"
-          decoding="async"
-          draggable={false}
-        />
+        <div className="portfolio-grid__img-stack" aria-hidden>
+          {slides.map((slide, i) => (
+            <img
+              key={slide.image}
+              src={slide.image}
+              alt=""
+              className={cn(
+                "portfolio-grid__img",
+                i === active && "portfolio-grid__img--active",
+              )}
+              loading={inView && i <= 1 ? "eager" : "lazy"}
+              decoding="async"
+              draggable={false}
+            />
+          ))}
+        </div>
       </button>
 
       {peek &&
@@ -204,6 +228,7 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
               )}
               onClick={(e) => {
                 e.stopPropagation();
+                preloadImages([slides[(i + 1) % n]!.image]);
                 goTo(i);
               }}
               aria-label={`Foto ${i + 1} de ${n}`}

@@ -25,22 +25,27 @@ export function Hero() {
 
             <div ref={ctaBlockRef} className="hero__cta-block">
               <div className="hero__actions">
-                <InstagramButton className="hero__cta hero__cta--instagram btn-instagram--compact">
+                <InstagramButton
+                  grouped
+                  className="hero__cta hero__cta--instagram btn-instagram--compact"
+                >
                   Instagram
                 </InstagramButton>
-                <WhatsAppButton className="hero__cta hero__cta--whatsapp">
+                <WhatsAppButton grouped className="hero__cta hero__cta--whatsapp">
                   WHATSAPP
                 </WhatsAppButton>
                 <a href="#portfolio" className="btn hero__cta hero__cta--portfolio">
-                  <TattooMachineIcon className="hero__cta-portfolio-icon shrink-0" />
-                  <span className="hero__cta-portfolio">Portfólio</span>
+                  <span className="hero__cta-content">
+                    <TattooMachineIcon className="hero__cta-portfolio-icon shrink-0" />
+                    <span className="hero__cta-label hero__cta-portfolio">Portfólio</span>
+                  </span>
                 </a>
               </div>
 
               <div className="hero__taglines">
                 <p
                   ref={taglinePrimaryRef}
-                  className="hero__tagline-line hero__tagline-line--primary font-manel text-muted"
+                  className="hero__tagline-line hero__tagline-line--primary font-manel"
                 >
                   Tatuagem autoral com semanas dedicadas na sua cidade.
                 </p>

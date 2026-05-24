@@ -1,20 +1,16 @@
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 /** Ao abrir/recarregar, garante scroll no topo (hero com logo centralizada). */
 export function ScrollToHero() {
   const { pathname } = useLocation();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (pathname !== "/") return;
-
-    const scrollTop = () => {
+    /* Só corrige se o browser restaurou posição — evita briga com o 1º scroll. */
+    if (window.scrollY !== 0) {
       window.scrollTo(0, 0);
-    };
-
-    scrollTop();
-    const id = window.requestAnimationFrame(scrollTop);
-    return () => window.cancelAnimationFrame(id);
+    }
   }, [pathname]);
 
   return null;

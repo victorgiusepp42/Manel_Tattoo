@@ -108,10 +108,28 @@ export function LightParticles() {
     };
 
     resize();
-    draw();
+
+    let started = false;
+    const start = () => {
+      if (started) return;
+      started = true;
+      draw();
+    };
+
+    const deferMs = coarse ? 1800 : 400;
+    const deferId =
+      typeof window.requestIdleCallback === "function"
+        ? window.requestIdleCallback(() => start(), { timeout: deferMs + 600 })
+        : window.setTimeout(start, deferMs);
+
     window.addEventListener("resize", resize, { passive: true });
 
     return () => {
+      if (typeof window.cancelIdleCallback === "function") {
+        window.cancelIdleCallback(deferId as number);
+      } else {
+        clearTimeout(deferId as number);
+      }
       cancelAnimationFrame(frame);
       window.removeEventListener("resize", resize);
     };
