@@ -23,12 +23,6 @@ export const BRAND = {
   slotsThisMonth: 3,
 } as const;
 
-export const PORTFOLIO_PHOTOS = [
-  assetUrl("portfolio/portfolio-1.jpg"),
-  assetUrl("portfolio/portfolio-2.jpg"),
-  assetUrl("portfolio/portfolio-3.jpg"),
-] as const;
-
 export const CATEGORIES = [
   "Old School",
   "Blackwork",
@@ -129,68 +123,6 @@ function metaToGalleryPhoto(m: GalleryMeta): GalleryPhoto {
 }
 
 export const PORTFOLIO_GALLERY: GalleryPhoto[] = PORTFOLIO_GALLERY_META.map(metaToGalleryPhoto);
-
-export const REGIONS = [
-  { id: "all", label: "Todo o Brasil" },
-  { id: "co", label: "Centro-Oeste" },
-  { id: "se", label: "Sudeste" },
-  { id: "s", label: "Sul" },
-  { id: "ne", label: "Nordeste" },
-  { id: "n", label: "Norte" },
-] as const;
-
-export type RegionId = (typeof REGIONS)[number]["id"];
-
-export type PortfolioItem = {
-  id: string;
-  style: (typeof CATEGORIES)[number];
-  region: RegionId;
-  title: string;
-  image: string;
-  imageFocus?: string;
-  beforeAfter?: boolean;
-};
-
-const PORTFOLIO_META: Omit<PortfolioItem, "image" | "imageFocus">[] = [
-  { id: "os1", style: "Old School", region: "co", title: "Pantera old school" },
-  { id: "os2", style: "Old School", region: "se", title: "Rosa tradicional" },
-  { id: "os3", style: "Old School", region: "s", title: "Dagger & banner" },
-  { id: "bw1", style: "Blackwork", region: "co", title: "Mandala blackwork" },
-  { id: "bw2", style: "Blackwork", region: "se", title: "Serpente sólida" },
-  { id: "re1", style: "Realismo", region: "co", title: "Retrato", beforeAfter: true },
-  { id: "re2", style: "Realismo", region: "ne", title: "Felino" },
-  { id: "fl1", style: "Fineline", region: "s", title: "Linha fina botânica" },
-  { id: "lt1", style: "Lettering", region: "co", title: "Script personalizado" },
-];
-
-const FOCUSES = [
-  "12% 18%",
-  "38% 22%",
-  "68% 20%",
-  "82% 45%",
-  "15% 52%",
-  "45% 55%",
-  "72% 58%",
-  "25% 78%",
-  "55% 75%",
-  "78% 82%",
-];
-
-export const PORTFOLIO: PortfolioItem[] = PORTFOLIO_META.map((item, i) => ({
-  ...item,
-  image: PORTFOLIO_PHOTOS[i % PORTFOLIO_PHOTOS.length]!,
-  imageFocus: FOCUSES[i % FOCUSES.length],
-}));
-
-export const STYLE_FILTERS = ["Todos", ...CATEGORIES] as const;
-export type StyleFilter = (typeof STYLE_FILTERS)[number];
-
-export const NEXT_CITIES = [
-  { city: "Goiânia", state: "GO", period: "Jun 2026", status: "confirmado" as const },
-  { city: "Brasília", state: "DF", period: "Jul 2026", status: "em breve" as const },
-  { city: "Belo Horizonte", state: "MG", period: "A definir", status: "votacao" as const },
-  { city: "São Paulo", state: "SP", period: "A definir", status: "votacao" as const },
-];
 
 export type TripStatus = "confirmado" | "em breve" | "votacao";
 
