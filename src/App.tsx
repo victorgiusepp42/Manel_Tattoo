@@ -8,7 +8,6 @@ import { Footer } from "./components/Footer";
 import { Hero } from "./components/Hero";
 import { NextTrips } from "./components/NextTrips";
 import { Portfolio } from "./components/Portfolio";
-import { Ticker } from "./components/Ticker";
 import { SocialFloats } from "./components/SocialFloats";
 import { NotFound } from "./pages/NotFound";
 
@@ -33,7 +32,6 @@ export default function App() {
       <ScrollPerf />
       <SmoothAnchors />
       <BrandBackground />
-      <Ticker />
       <Routes>
         <Route
           path="/"

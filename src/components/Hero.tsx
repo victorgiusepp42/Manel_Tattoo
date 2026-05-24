@@ -3,6 +3,7 @@ import { useFitOneLine } from "../hooks/useFitOneLine";
 import { HeroBrandLockup } from "./HeroBrandLockup";
 import { InstagramButton } from "./InstagramButton";
 import { WhatsAppButton } from "./WhatsAppButton";
+import { Ticker } from "./Ticker";
 import { TattooMachineIcon } from "./icons/TattooMachineIcon";
 
 export function Hero() {
@@ -18,6 +19,7 @@ export function Hero() {
       id="inicio"
       className="hero relative flex flex-col overflow-hidden"
     >
+      <Ticker />
       <div className="hero__inner relative z-10 mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center text-center">
         <div className="hero__content">
           <div className="hero__cluster">
