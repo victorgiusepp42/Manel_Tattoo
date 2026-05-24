@@ -1,12 +1,14 @@
+import { type RefObject } from "react";
 import { BRAND } from "../data/site";
 import { cn } from "../lib/cn";
 
 type Props = {
   className?: string;
+  markRef?: RefObject<HTMLImageElement | null>;
 };
 
 /** Lockup do rodapé (figura + MANEL + TATTOO em gradiente). */
-export function FooterBrandLockup({ className }: Props) {
+export function FooterBrandLockup({ className, markRef }: Props) {
   return (
     <div
       className={cn("footer-brand-lockup-stack", className)}
@@ -14,6 +16,7 @@ export function FooterBrandLockup({ className }: Props) {
       aria-label="Manel Tattoo"
     >
       <img
+        ref={markRef}
         src={BRAND.brandLockupMark}
         alt=""
         width={1024}
