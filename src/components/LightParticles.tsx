@@ -40,38 +40,15 @@ export function LightParticles() {
     let tick = 0;
     let particles: Particle[] = [];
     const coarse = window.matchMedia("(pointer: coarse)").matches;
-    const maxCount = coarse ? 42 : 95;
-    const minCount = coarse ? 28 : 58;
-
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      const area = canvas.width * canvas.height;
-      const count = Math.min(maxCount, Math.max(minCount, Math.round(area / (coarse ? 11000 : 7200))));
-
-      particles = Array.from({ length: count }, (_, i) => {
-        const glow = i % 4 === 0;
-        return {
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          r: glow ? Math.random() * 2.2 + 1.4 : Math.random() * 1.4 + 0.5,
-          vx: (Math.random() - 0.5) * (glow ? 0.1 : 0.2),
-          vy: (Math.random() - 0.5) * (glow ? 0.1 : 0.2),
-          a: glow ? Math.random() * 0.16 + 0.38 : Math.random() * 0.18 + 0.26,
-          c: COLORS[Math.floor(Math.random() * COLORS.length)]!,
-          phase: Math.random() * Math.PI * 2,
-          twinkle: Math.random() * 0.028 + 0.016,
-          glow,
-        };
-      });
-    };
+    const maxCount = coarse ? 72 : 150;
+    const minCount = coarse ? 48 : 85;
 
     const drawParticle = (p: Particle, alpha: number) => {
-      const haloR = p.r * (p.glow ? 4 : 2.6);
+      const haloR = p.r * (p.glow ? 4.8 : 3.2);
 
       const halo = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, haloR);
-      halo.addColorStop(0, `rgba(${p.c},${alpha * 0.92})`);
-      halo.addColorStop(0.35, `rgba(${p.c},${alpha * 0.42})`);
+      halo.addColorStop(0, `rgba(${p.c},${alpha * 0.98})`);
+      halo.addColorStop(0.35, `rgba(${p.c},${alpha * 0.52})`);
       halo.addColorStop(1, `rgba(${p.c},0)`);
       ctx.fillStyle = halo;
       ctx.beginPath();
@@ -84,6 +61,41 @@ export function LightParticles() {
       ctx.fill();
     };
 
+    const renderFrame = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.globalCompositeOperation = "lighter";
+      particles.forEach((p) => {
+        const pulse = 0.82 + 0.18 * Math.sin(tick * p.twinkle + p.phase);
+        drawParticle(p, Math.min(0.92, p.a * pulse));
+      });
+      ctx.globalCompositeOperation = "source-over";
+    };
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const area = canvas.width * canvas.height;
+      const count = Math.min(maxCount, Math.max(minCount, Math.round(area / (coarse ? 7800 : 5200))));
+
+      particles = Array.from({ length: count }, (_, i) => {
+        const glow = i % 3 === 0;
+        return {
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: glow ? Math.random() * 2.6 + 1.6 : Math.random() * 1.6 + 0.65,
+          vx: (Math.random() - 0.5) * (glow ? 0.1 : 0.2),
+          vy: (Math.random() - 0.5) * (glow ? 0.1 : 0.2),
+          a: glow ? Math.random() * 0.2 + 0.52 : Math.random() * 0.22 + 0.34,
+          c: COLORS[Math.floor(Math.random() * COLORS.length)]!,
+          phase: Math.random() * Math.PI * 2,
+          twinkle: Math.random() * 0.028 + 0.016,
+          glow,
+        };
+      });
+
+      renderFrame();
+    };
+
     const draw = () => {
       frame = requestAnimationFrame(draw);
       if (document.hidden) return;
@@ -91,8 +103,6 @@ export function LightParticles() {
       tick += 1;
       if (!scrollIdleRef.current) return;
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.globalCompositeOperation = "lighter";
       particles.forEach((p) => {
         p.x += p.vx;
         p.y += p.vy;
@@ -100,36 +110,17 @@ export function LightParticles() {
         if (p.x > canvas.width + 16) p.x = -16;
         if (p.y < -16) p.y = canvas.height + 16;
         if (p.y > canvas.height + 16) p.y = -16;
-
-        const pulse = 0.78 + 0.22 * Math.sin(tick * p.twinkle + p.phase);
-        drawParticle(p, Math.min(0.78, p.a * pulse));
       });
-      ctx.globalCompositeOperation = "source-over";
+
+      renderFrame();
     };
 
     resize();
-
-    let started = false;
-    const start = () => {
-      if (started) return;
-      started = true;
-      draw();
-    };
-
-    const deferMs = coarse ? 1800 : 400;
-    const deferId =
-      typeof window.requestIdleCallback === "function"
-        ? window.requestIdleCallback(() => start(), { timeout: deferMs + 600 })
-        : window.setTimeout(start, deferMs);
+    draw();
 
     window.addEventListener("resize", resize, { passive: true });
 
     return () => {
-      if (typeof window.cancelIdleCallback === "function") {
-        window.cancelIdleCallback(deferId as number);
-      } else {
-        clearTimeout(deferId as number);
-      }
       cancelAnimationFrame(frame);
       window.removeEventListener("resize", resize);
     };
