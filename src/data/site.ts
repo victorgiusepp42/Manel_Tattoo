@@ -67,8 +67,8 @@ export type GalleryPhoto = {
   missing?: boolean;
   /** Slides do carrossel (sempre presente quando não está `missing`) */
   slides: readonly GallerySlide[];
-  /** Post/reel no Instagram deste slot. */
-  instagramUrl?: string;
+  /** Post/reel no Instagram deste slot. `null` = sem post público. */
+  instagramUrl?: string | null;
 };
 
 function slideAt(index: number, slide: 1 | 2, caption: string): GallerySlide {
@@ -95,11 +95,12 @@ type GalleryMeta = {
   missing?: boolean;
 };
 
-const PORTFOLIO_INSTAGRAM_URLS: Record<number, string | undefined> = {
+const PORTFOLIO_INSTAGRAM_URLS: Record<number, string | null> = {
   1: "https://www.instagram.com/p/DQt7RKRjSNk/",
   2: "https://www.instagram.com/p/DTn-joTD2vF/",
   3: "https://www.instagram.com/p/DTtT6KfD0Iy/",
   4: "https://www.instagram.com/reel/DKaY1loShgj/",
+  5: null,
   6: "https://www.instagram.com/p/DMbgEAINfZ3/",
   7: "https://www.instagram.com/reel/DLDrmH_ynB2/",
   9: "https://www.instagram.com/p/C9f9dSDSq3n/",
