@@ -32,22 +32,22 @@ export function Artist() {
           </figure>
           <SectionHeading line1="Sobre" line2="Manel" layout="inline" className="mb-3" />
           <p className="artist-bio__text leading-relaxed text-muted">
-            Manel é tatuador em Catalão e desenvolve seus projetos transitando principalmente entre o
-            old school e projetos personalizados construídos junto de cada cliente.
+            Manel Tattoo é um artista brasileiro que trabalha com tatuagem old school e projetos diversos
+            com forte identidade visual. Seu trabalho mistura a estética clássica da tatuagem tradicional
+            com referências da cultura brasileira, arte popular e elementos contemporâneos.
           </p>
           <p className="artist-bio__text mt-4 leading-relaxed text-muted">
-            A ilustração no fundo deste site é uma criação dele, produzida em 2024 — parte de um
-            processo que mistura desenho, composição e identidade visual própria.
+            Cada tatuagem é construída buscando equilíbrio entre impacto visual, composição sólida e
+            significado. Das peças mais tradicionais às criações personalizadas, seu estilo carrega linhas
+            marcantes, contraste forte e desenhos pensados para envelhecer bem na pele.
           </p>
           <p className="artist-bio__text mt-4 leading-relaxed text-muted">
-            Atualmente atua no Hermanos Studio em Catalão - GO e também organiza temporadas em
-            cidades de diferentes regiões do Brasil, atendendo pessoas que acompanham seu trabalho à
-            distância.
+            Manel transforma ideias em tatuagens com personalidade. Peças que contam histórias, carregam
+            memória e permanecem vivas com o tempo.
           </p>
           <p className="artist-bio__text mt-4 leading-relaxed text-muted">
-            Para Manel, tatuagem não começa na referência pronta nem na tendência do momento. Começa
-            na conversa. Na ideia, na memória, na estética e principalmente na sensação que a pessoa
-            quer carregar quando se olha no espelho.
+            Seu trabalho vem conquistando espaço entre clientes que procuram autenticidade, originalidade
+            e uma tatuagem feita pra durar.
           </p>
         </div>
       </div>
