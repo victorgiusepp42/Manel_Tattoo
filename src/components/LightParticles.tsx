@@ -79,12 +79,15 @@ export function LightParticles() {
 
       particles = Array.from({ length: count }, (_, i) => {
         const glow = i % 3 === 0;
+        const speedGlow = coarse ? 0.18 : 0.1;
+        const speedNormal = coarse ? 0.3 : 0.2;
+        const speed = glow ? speedGlow : speedNormal;
         return {
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
           r: glow ? Math.random() * 2.6 + 1.6 : Math.random() * 1.6 + 0.65,
-          vx: (Math.random() - 0.5) * (glow ? 0.1 : 0.2),
-          vy: (Math.random() - 0.5) * (glow ? 0.1 : 0.2),
+          vx: (Math.random() - 0.5) * speed,
+          vy: (Math.random() - 0.5) * speed,
           a: glow ? Math.random() * 0.2 + 0.52 : Math.random() * 0.22 + 0.34,
           c: COLORS[Math.floor(Math.random() * COLORS.length)]!,
           phase: Math.random() * Math.PI * 2,
@@ -101,7 +104,7 @@ export function LightParticles() {
       if (document.hidden) return;
 
       tick += 1;
-      if (!scrollIdleRef.current) return;
+      if (!coarse && !scrollIdleRef.current) return;
 
       particles.forEach((p) => {
         p.x += p.vx;
