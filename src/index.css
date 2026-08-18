@@ -951,7 +951,7 @@ body.portfolio-peek-open {
 
 .portfolio-grid__more {
   box-sizing: border-box;
-  display: inline-flex;
+  display: inline-flex !important;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
@@ -969,11 +969,12 @@ body.portfolio-peek-open {
   text-decoration: none;
   text-align: center;
   white-space: nowrap;
-  color: #fff;
+  color: #fff !important;
   opacity: 0.72;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   transition: opacity 0.2s ease;
+  visibility: visible !important;
 }
 
 @container (max-width: 108px) {
