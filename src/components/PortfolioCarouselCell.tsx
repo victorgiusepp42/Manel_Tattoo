@@ -212,6 +212,7 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="portfolio-peek__more"
+                  onClick={(e) => e.stopPropagation()}
                 >
                   Ver mais
                 </a>
