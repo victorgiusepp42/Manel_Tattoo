@@ -1812,9 +1812,11 @@ html.lightbox-scroll-locked,
 body.lightbox-scroll-locked {
   overflow: hidden !important;
   position: fixed !important;
-  width: 100vw !important;
-  height: 100vh !important;
+  width: 100% !important;
+  height: 100dvh !important;
   touch-action: none !important;
+  overscroll-behavior: none !important;
+  -webkit-overflow-scrolling: touch !important;
 }
 
 .lightbox__bar {
