@@ -43,6 +43,7 @@ html {
   scroll-behavior: auto;
   overflow-x: clip;
   touch-action: pan-y;
+  overscroll-behavior: none;
   /* SEM overflow-y: body é o scroll container natural */
 }
 
@@ -1817,6 +1818,17 @@ body.lightbox-scroll-locked {
   touch-action: none !important;
   overscroll-behavior: none !important;
   -webkit-overflow-scrolling: touch !important;
+  pointer-events: none !important;
+}
+
+html.lightbox-scroll-locked *,
+body.lightbox-scroll-locked * {
+  pointer-events: none !important;
+}
+
+.lightbox,
+.lightbox * {
+  pointer-events: auto !important;
 }
 
 .lightbox__bar {
