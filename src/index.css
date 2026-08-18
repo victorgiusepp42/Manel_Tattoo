@@ -767,8 +767,22 @@ html.is-scrolling .ticker__track {
 }
 
 .portfolio-peek--active {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
   opacity: 1;
   background: rgba(0, 0, 0, 0.88);
+  pointer-events: auto;
+  overscroll-behavior: none;
+}
+
+body.portfolio-peek-open {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100% !important;
+  height: 100dvh !important;
+  touch-action: none !important;
+  overscroll-behavior: none !important;
 }
 
 .portfolio-peek__img {
@@ -807,6 +821,8 @@ html.is-scrolling .ticker__track {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  position: relative;
+  z-index: 10;
   padding: 0.4em 0.63em;
   border: 1px solid rgba(255, 255, 255, 0.82);
   border-radius: 0.4em;
@@ -818,6 +834,7 @@ html.is-scrolling .ticker__track {
   letter-spacing: 0.02em;
   color: #d1d5db;
   text-decoration: none;
+  pointer-events: auto;
 }
 
 .portfolio-peek__more:hover {
@@ -1827,7 +1844,9 @@ body.lightbox-scroll-locked * {
 }
 
 .lightbox,
-.lightbox * {
+.lightbox *,
+.portfolio-peek,
+.portfolio-peek * {
   pointer-events: auto !important;
 }
 

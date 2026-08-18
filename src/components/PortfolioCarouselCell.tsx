@@ -69,6 +69,27 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
     setZoomOpen((z) => !z);
   }, []);
 
+  // Bloqueia scroll quando zoom está aberto
+  useEffect(() => {
+    if (zoomOpen) {
+      document.body.classList.add('portfolio-peek-open');
+      document.documentElement.classList.add('portfolio-peek-open');
+      const preventDefault = (e: Event) => e.preventDefault();
+      document.addEventListener('touchmove', preventDefault, { passive: false });
+      document.addEventListener('gesturestart', preventDefault);
+      document.addEventListener('gesturechange', preventDefault);
+      document.addEventListener('gestureend', preventDefault);
+      return () => {
+        document.body.classList.remove('portfolio-peek-open');
+        document.documentElement.classList.remove('portfolio-peek-open');
+        document.removeEventListener('touchmove', preventDefault);
+        document.removeEventListener('gesturestart', preventDefault);
+        document.removeEventListener('gesturechange', preventDefault);
+        document.removeEventListener('gestureend', preventDefault);
+      };
+    }
+  }, [zoomOpen]);
+
   const handlePointerDown = useCallback(
     (e: React.PointerEvent<HTMLButtonElement>) => {
       if (e.button !== 0) return;
