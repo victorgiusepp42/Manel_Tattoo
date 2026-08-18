@@ -38,7 +38,8 @@ export function Lightbox({ item, onClose }: Props) {
     document.body.style.top = `-${scrollYRef.current}px`;
 
     // Adiciona classe para CSS saber que modal está aberto
-    document.body.classList.add("lightbox-open");
+    document.body.classList.add("lightbox-scroll-locked");
+    document.documentElement.classList.add("lightbox-scroll-locked");
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") handleClose();
@@ -54,11 +55,13 @@ export function Lightbox({ item, onClose }: Props) {
     document.addEventListener("gesturestart", preventDefault);
     document.addEventListener("gesturechange", preventDefault);
     document.addEventListener("gestureend", preventDefault);
+    document.addEventListener("scroll", preventDefault, { passive: false });
 
     window.addEventListener("keydown", onKey);
 
     return () => {
-      document.body.classList.remove("lightbox-open");
+      document.body.classList.remove("lightbox-scroll-locked");
+      document.documentElement.classList.remove("lightbox-scroll-locked");
       document.body.style.overflow = originalStyle;
       document.body.style.position = originalPosition;
       document.body.style.top = originalTop;
@@ -69,6 +72,7 @@ export function Lightbox({ item, onClose }: Props) {
       document.removeEventListener("gesturestart", preventDefault);
       document.removeEventListener("gesturechange", preventDefault);
       document.removeEventListener("gestureend", preventDefault);
+      document.removeEventListener("scroll", preventDefault);
 
       window.scrollTo(0, scrollYRef.current);
     };
