@@ -1,0 +1,9 @@
+Fonte display da marca (MANEL TATTOO)
+
+Para usar a fonte exata do espécime:
+1. Exporte como manel-display.woff2 (recomendado) ou .ttf
+2. Execute: MANEL_FONT_FILE="caminho/para/arquivo.woff2" node scripts/install-manel-font.mjs
+
+O site usa primeiro manel-display.* em src/fonts/; se não existir, usa o fallback embutido.
+
+Espécime de referência: manel-display-specimen.png
