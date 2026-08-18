@@ -69,11 +69,6 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
     setZoomOpen((z) => !z);
   }, []);
 
-  const preloadNext = useCallback(() => {
-    if (n <= 1) return;
-    preloadImages([slides[(active + 1) % n]!.image]);
-  }, [active, n, slides]);
-
   const handlePointerDown = useCallback(
     (e: React.PointerEvent<HTMLButtonElement>) => {
       if (e.button !== 0) return;

@@ -1,5 +1,4 @@
 import { useRef } from "react";
-import { useFitOneLine } from "../hooks/useFitOneLine";
 import { HeroBrandLockup } from "./HeroBrandLockup";
 import { InstagramButton } from "./InstagramButton";
 import { WhatsAppButton } from "./WhatsAppButton";
@@ -8,11 +7,6 @@ import { TattooMachineIcon } from "./icons/TattooMachineIcon";
 
 export function Hero() {
   const ctaBlockRef = useRef<HTMLDivElement>(null);
-  const taglinePrimaryRef = useFitOneLine<HTMLParagraphElement>({
-    minPx: 7,
-    maxPx: 18,
-    widthRef: ctaBlockRef,
-  });
 
   return (
     <section
