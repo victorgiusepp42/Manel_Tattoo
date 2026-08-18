@@ -6,7 +6,7 @@ import { preloadImages } from "../hooks/usePreloadImages";
 import type { GalleryPhoto, GallerySlide } from "../data/site";
 
 /** Distância mínima para considerar swipe (em pixels) */
-const SWIPE_THRESHOLD = 30;
+const SWIPE_THRESHOLD = 60;
 
 type Props = {
   photo: GalleryPhoto;
