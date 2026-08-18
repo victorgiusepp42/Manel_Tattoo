@@ -69,8 +69,9 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
     setZoomOpen((z) => !z);
   }, []);
 
-  // Bloqueia scroll quando zoom está aberto
+  // Salva e restaura scroll ao abrir/fechar zoom
   useEffect(() => {
+    const savedScrollY = window.scrollY;
     if (zoomOpen) {
       document.body.classList.add('portfolio-peek-open');
       document.documentElement.classList.add('portfolio-peek-open');
@@ -86,7 +87,8 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
         document.removeEventListener('gesturestart', preventDefault);
         document.removeEventListener('gesturechange', preventDefault);
         document.removeEventListener('gestureend', preventDefault);
-        // NÃO faz scroll ao fechar - mantém posição atual
+        // Restaura scroll na posição exata
+        window.scrollTo(0, savedScrollY);
       };
     }
   }, [zoomOpen]);
