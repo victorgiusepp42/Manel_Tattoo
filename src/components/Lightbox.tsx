@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { InstagramButton } from "./InstagramButton";
 
 export type LightboxItem = {
@@ -17,26 +17,39 @@ const ZOOM_STEPS = [1, 1.5, 2] as const;
 
 export function Lightbox({ item, onClose }: Props) {
   const [zoomIdx, setZoomIdx] = useState(0);
+  const scrollYRef = useRef(0);
   const scale = ZOOM_STEPS[zoomIdx];
 
+  const handleClose = () => {
+    onClose();
+  };
+
   useEffect(() => {
+    scrollYRef.current = window.scrollY;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") handleClose();
       if (e.key === "+" || e.key === "=") setZoomIdx((i) => Math.min(i + 1, ZOOM_STEPS.length - 1));
       if (e.key === "-") setZoomIdx((i) => Math.max(i - 1, 0));
     };
     window.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.width = "100%";
+    document.body.style.top = `-${scrollYRef.current}px`;
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.body.style.top = "";
+      window.scrollTo(0, scrollYRef.current);
     };
   }, [onClose]);
 
   return (
     <section className="lightbox" role="dialog" aria-modal aria-label="Visualização do trabalho">
       <header className="lightbox__bar">
-        <button type="button" onClick={onClose} className="lightbox__btn min-h-[44px]">
+        <button type="button" onClick={handleClose} className="lightbox__btn min-h-[44px]">
           Fechar
         </button>
         <section className="flex gap-2">
