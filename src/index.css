@@ -1808,6 +1808,13 @@ html.is-scrolling .ticker__track {
   touch-action: none;
 }
 
+body.lightbox-open {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100vw !important;
+  height: 100vh !important;
+}
+
 .lightbox__bar {
   display: flex;
   align-items: center;

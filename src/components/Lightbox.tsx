@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { InstagramButton } from "./InstagramButton";
 
 export type LightboxItem = {
@@ -20,41 +20,68 @@ export function Lightbox({ item, onClose }: Props) {
   const scrollYRef = useRef(0);
   const scale = ZOOM_STEPS[zoomIdx];
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     onClose();
-  };
+  }, [onClose]);
 
   useEffect(() => {
     scrollYRef.current = window.scrollY;
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    const originalPosition = window.getComputedStyle(document.body).position;
+    const originalTop = window.getComputedStyle(document.body).top;
+    const originalWidth = window.getComputedStyle(document.body).width;
+
+    // Bloqueia scroll no body
+    document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.width = "100%";
+    document.body.style.top = `-${scrollYRef.current}px`;
+
+    // Adiciona classe para CSS saber que modal está aberto
+    document.body.classList.add("lightbox-open");
+
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") handleClose();
       if (e.key === "+" || e.key === "=") setZoomIdx((i) => Math.min(i + 1, ZOOM_STEPS.length - 1));
       if (e.key === "-") setZoomIdx((i) => Math.max(i - 1, 0));
     };
-    const preventScroll = (e: TouchEvent) => {
-      if (e.target === document.body || document.body.contains(e.target as Node)) {
-        e.preventDefault();
-      }
-    };
+
+    // Previne scroll no window
+    const preventDefault = (e: Event) => e.preventDefault();
+
+    // Tenta bloquear touchmove
+    document.addEventListener("touchmove", preventDefault, { passive: false });
+    document.addEventListener("gesturestart", preventDefault);
+    document.addEventListener("gesturechange", preventDefault);
+    document.addEventListener("gestureend", preventDefault);
+
     window.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    document.body.style.position = "fixed";
-    document.body.style.width = "100%";
-    document.body.style.top = `-${scrollYRef.current}px`;
-    document.body.addEventListener("touchmove", preventScroll, { passive: false });
+
     return () => {
+      document.body.classList.remove("lightbox-open");
+      document.body.style.overflow = originalStyle;
+      document.body.style.position = originalPosition;
+      document.body.style.top = originalTop;
+      document.body.style.width = originalWidth;
+
       window.removeEventListener("keydown", onKey);
-      document.body.removeEventListener("touchmove", preventScroll);
-      document.body.style.overflow = "";
-      document.body.style.position = "";
-      document.body.style.width = "";
-      document.body.style.top = "";
+      document.removeEventListener("touchmove", preventDefault);
+      document.removeEventListener("gesturestart", preventDefault);
+      document.removeEventListener("gesturechange", preventDefault);
+      document.removeEventListener("gestureend", preventDefault);
+
       window.scrollTo(0, scrollYRef.current);
     };
-  }, [onClose]);
+  }, [handleClose]);
 
   return (
-    <section className="lightbox" role="dialog" aria-modal aria-label="Visualização do trabalho">
+    <div
+      className="lightbox"
+      role="dialog"
+      aria-modal
+      aria-label="Visualização do trabalho"
+      onTouchMove={(e) => e.stopPropagation()}
+    >
       <header className="lightbox__bar">
         <button type="button" onClick={handleClose} className="lightbox__btn min-h-[44px]">
           Fechar
@@ -79,7 +106,7 @@ export function Lightbox({ item, onClose }: Props) {
         </section>
       </header>
 
-      <section className="lightbox__viewport">
+      <section className="lightbox__viewport" onTouchMove={(e) => e.stopPropagation()}>
         <img
           src={item.image}
           alt={item.title}
@@ -96,6 +123,6 @@ export function Lightbox({ item, onClose }: Props) {
           Quero algo assim
         </InstagramButton>
       </footer>
-    </section>
+    </div>
   );
 }
