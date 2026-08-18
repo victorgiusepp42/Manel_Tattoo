@@ -197,12 +197,6 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
             onPointerMove={handleZoomPointerMove}
             onPointerUp={handleZoomPointerUp}
           >
-            <img
-              src={current.image}
-              alt=""
-              className="portfolio-peek__img"
-              draggable={false}
-            />
             {/* Meta info que aparece com zoom */}
             <div className="portfolio-peek__meta">
               <p className="portfolio-peek__style">{photo.style}</p>
@@ -218,6 +212,12 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
                 </a>
               ) : null}
             </div>
+            <img
+              src={current.image}
+              alt=""
+              className="portfolio-peek__img"
+              draggable={false}
+            />
             {/* Dots que aparecem com zoom */}
             {n > 1 && (
               <div
