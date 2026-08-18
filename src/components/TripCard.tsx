@@ -4,7 +4,7 @@ import { HomeIcon } from "./icons/HomeIcon";
 import { PointingHandIcon } from "./icons/PointingHandIcon";
 import { WhatsAppButton } from "./WhatsAppButton";
 
-const TRIPS_WITH_DATES = new Set([]);
+const TRIPS_WITH_DATES = new Set<string>([]);
 
 type Props = {
   trip: UpcomingTrip;
