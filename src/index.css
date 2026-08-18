@@ -806,7 +806,7 @@ html.is-scrolling .ticker__track {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  padding: 0.33em 0.63em;
+  padding: 0.4em 0.63em;
   border: 1px solid rgba(255, 255, 255, 0.82);
   border-radius: 0.4em;
   background: transparent;
@@ -815,7 +815,7 @@ html.is-scrolling .ticker__track {
   font-weight: 400;
   line-height: 1;
   letter-spacing: 0.02em;
-  color: #f59e0b;
+  color: #d1d5db;
   text-decoration: none;
 }
 
@@ -1838,6 +1838,22 @@ html.is-scrolling .ticker__track {
   overflow: auto;
   padding: 1rem;
   touch-action: pan-x pan-y pinch-zoom;
+}
+
+@media (min-width: 640px) {
+  .lightbox__viewport {
+    max-height: calc(100vh - 220px);
+  }
+
+  .lightbox__cta.btn {
+    min-width: 48px;
+    padding: 0.75rem;
+    font-size: 0;
+  }
+
+  .lightbox__cta.btn::after {
+    content: "";
+  }
 }
 
 .lightbox__footer {

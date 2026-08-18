@@ -206,6 +206,7 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="portfolio-peek__more"
+                  style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', height: '100%', minHeight: '28px' }}
                 >
                   Ver mais
                 </a>

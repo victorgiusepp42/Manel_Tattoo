@@ -72,7 +72,7 @@ export function Lightbox({ item, onClose }: Props) {
       <footer className="lightbox__footer">
         {item.style ? <span className="pill">{item.style}</span> : null}
         <h3 className="headline-heavy text-2xl text-cream">{item.title}</h3>
-        <InstagramButton className="min-h-[48px] w-full sm:w-auto">
+        <InstagramButton className="lightbox__cta min-h-[48px] w-full sm:w-auto">
           Quero algo assim
         </InstagramButton>
       </footer>
