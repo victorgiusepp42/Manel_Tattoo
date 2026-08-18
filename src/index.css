@@ -781,6 +781,62 @@ html.is-scrolling .ticker__track {
   opacity: 1;
 }
 
+.portfolio-peek__meta {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.portfolio-peek__style {
+  font-family: var(--font-manel);
+  font-size: 1.125rem;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.portfolio-peek__more {
+  font-family: var(--font-barlow);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #f59e0b;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.portfolio-peek__more:hover {
+  color: #fbbf24;
+}
+
+.portfolio-peek__dots {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+}
+
+.portfolio-peek__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.portfolio-peek__dot--active {
+  background: #f59e0b;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .portfolio-peek,
   .portfolio-peek__img {

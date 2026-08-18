@@ -203,6 +203,47 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
               className="portfolio-peek__img"
               draggable={false}
             />
+            {/* Meta info que aparece com zoom */}
+            <div className="portfolio-peek__meta">
+              <p className="portfolio-peek__style">{photo.style}</p>
+              {photo.instagramUrl ? (
+                <a
+                  href={photo.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="portfolio-peek__more"
+                >
+                  Ver mais
+                </a>
+              ) : null}
+            </div>
+            {/* Dots que aparecem com zoom */}
+            {n > 1 && (
+              <div
+                className="portfolio-peek__dots"
+                role="tablist"
+                aria-label="Fotos deste trabalho"
+              >
+                {slides.map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    role="tab"
+                    aria-selected={i === active}
+                    tabIndex={-1}
+                    className={cn(
+                      "portfolio-peek__dot",
+                      i === active && "portfolio-peek__dot--active",
+                    )}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      goTo(i);
+                    }}
+                    aria-label={`Foto ${i + 1} de ${n}`}
+                  />
+                ))}
+              </div>
+            )}
           </div>,
           document.body,
         )}
