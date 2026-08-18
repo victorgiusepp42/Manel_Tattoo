@@ -86,6 +86,7 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
         document.removeEventListener('gesturestart', preventDefault);
         document.removeEventListener('gesturechange', preventDefault);
         document.removeEventListener('gestureend', preventDefault);
+        // NÃO faz scroll ao fechar - mantém posição atual
       };
     }
   }, [zoomOpen]);
@@ -221,17 +222,6 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
             {/* Meta info que aparece com zoom */}
             <div className="portfolio-peek__meta">
               <p className="portfolio-peek__style">{photo.style}</p>
-              {photo.instagramUrl ? (
-                <a
-                  href={photo.instagramUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="portfolio-peek__more"
-                  style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', height: '100%', minHeight: '28px' }}
-                >
-                  Ver mais
-                </a>
-              ) : null}
             </div>
             <img
               src={current.image}
