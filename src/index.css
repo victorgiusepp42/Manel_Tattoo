@@ -1804,6 +1804,8 @@ html.is-scrolling .ticker__track {
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   animation: fade-in 0.2s ease;
+  overscroll-behavior: none;
+  touch-action: none;
 }
 
 .lightbox__bar {
@@ -1837,6 +1839,7 @@ html.is-scrolling .ticker__track {
   justify-content: center;
   overflow: auto;
   padding: 1rem;
+  overscroll-behavior: contain;
   touch-action: pan-x pan-y pinch-zoom;
 }
 
