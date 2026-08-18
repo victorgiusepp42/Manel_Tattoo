@@ -748,10 +748,8 @@ html.is-scrolling .ticker__track {
   z-index: 1;
 }
 
-/* Ampliar enquanto pressiona — zoom gradual */
+/* Zoom instantâneo */
 .portfolio-peek {
-  --portfolio-peek-ms: 620ms;
-  --portfolio-peek-ease: cubic-bezier(0.22, 1, 0.36, 1);
   position: fixed;
   inset: 0;
   z-index: 900;
@@ -761,11 +759,8 @@ html.is-scrolling .ticker__track {
   padding: clamp(0.75rem, 4vw, 1.5rem);
   background: rgba(0, 0, 0, 0);
   opacity: 0;
-  touch-action: none;
-  cursor: zoom-out;
-  transition:
-    opacity var(--portfolio-peek-ms) var(--portfolio-peek-ease),
-    background-color var(--portfolio-peek-ms) var(--portfolio-peek-ease);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
 }
 
 .portfolio-peek--active {
@@ -782,17 +777,6 @@ html.is-scrolling .ticker__track {
   object-fit: contain;
   border-radius: 10px;
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.65);
-  pointer-events: none;
-  user-select: none;
-  transform: scale(0.72);
-  opacity: 0.35;
-  transition:
-    transform calc(var(--portfolio-peek-ms) * 1.08) var(--portfolio-peek-ease),
-    opacity var(--portfolio-peek-ms) ease-out;
-  will-change: transform, opacity;
-}
-
-.portfolio-peek--active .portfolio-peek__img {
   transform: scale(1);
   opacity: 1;
 }

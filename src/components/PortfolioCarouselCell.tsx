@@ -5,10 +5,8 @@ import { useInView } from "../hooks/useInView";
 import { preloadImages } from "../hooks/usePreloadImages";
 import type { GalleryPhoto, GallerySlide } from "../data/site";
 
-/** Toque rápido (< 0,6s) troca de foto; segurar 0,6s abre o zoom. */
-const TAP_MS = 600;
-const ZOOM_HOLD_MS = 600;
-const PEEK_ANIM_MS = 620;
+/** Distância mínima para considerar swipe (em pixels) */
+const SWIPE_THRESHOLD = 30;
 
 type Props = {
   photo: GalleryPhoto;
@@ -17,16 +15,12 @@ type Props = {
 
 export function PortfolioCarouselCell({ photo, slides }: Props) {
   const [active, setActive] = useState(0);
-  const [peek, setPeek] = useState(false);
-  const [peekActive, setPeekActive] = useState(false);
-  const pressStartRef = useRef(0);
-  const pressActiveRef = useRef(false);
-  const pointerIdRef = useRef<number | null>(null);
+  const [zoomOpen, setZoomOpen] = useState(false);
+
   const cellRef = useRef<HTMLButtonElement>(null);
-  const zoomOpenedRef = useRef(false);
-  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const zoomTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const globalEndRef = useRef<(() => void) | null>(null);
+  const swipeStartXRef = useRef(0);
+  const isSwipingRef = useRef(false);
+  const isPointerDownRef = useRef(false);
 
   const inView = useInView(cellRef, { rootMargin: "320px" });
   const slideUrls = useMemo(() => slides.map((s) => s.image), [slides]);
@@ -55,51 +49,6 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
     };
   }, [inView, slideUrls, slides.length]);
 
-  const clearZoomTimer = useCallback(() => {
-    if (zoomTimerRef.current !== null) {
-      clearTimeout(zoomTimerRef.current);
-      zoomTimerRef.current = null;
-    }
-  }, []);
-
-  const removeGlobalEnd = useCallback(() => {
-    const fn = globalEndRef.current;
-    if (!fn) return;
-    window.removeEventListener("pointerup", fn);
-    window.removeEventListener("pointercancel", fn);
-    globalEndRef.current = null;
-  }, []);
-
-  const closeZoom = useCallback(() => {
-    zoomOpenedRef.current = false;
-    setPeekActive(false);
-    if (closeTimerRef.current !== null) clearTimeout(closeTimerRef.current);
-    closeTimerRef.current = setTimeout(() => {
-      setPeek(false);
-      closeTimerRef.current = null;
-    }, PEEK_ANIM_MS);
-  }, []);
-
-  useEffect(() => {
-    if (!peek) {
-      setPeekActive(false);
-      return;
-    }
-    const id = requestAnimationFrame(() => {
-      requestAnimationFrame(() => setPeekActive(true));
-    });
-    return () => cancelAnimationFrame(id);
-  }, [peek]);
-
-  useEffect(
-    () => () => {
-      removeGlobalEnd();
-      clearZoomTimer();
-      if (closeTimerRef.current !== null) clearTimeout(closeTimerRef.current);
-    },
-    [clearZoomTimer, removeGlobalEnd],
-  );
-
   const n = slides.length;
 
   const goNext = useCallback(() => {
@@ -107,8 +56,17 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
     setActive((i) => (i + 1) % n);
   }, [n]);
 
+  const goPrev = useCallback(() => {
+    if (n <= 1) return;
+    setActive((i) => (i - 1 + n) % n);
+  }, [n]);
+
   const goTo = useCallback((i: number) => {
     setActive(i);
+  }, []);
+
+  const toggleZoom = useCallback(() => {
+    setZoomOpen((z) => !z);
   }, []);
 
   const preloadNext = useCallback(() => {
@@ -116,62 +74,83 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
     preloadImages([slides[(active + 1) % n]!.image]);
   }, [active, n, slides]);
 
-  const endPress = useCallback(() => {
-    if (!pressActiveRef.current) return;
-    pressActiveRef.current = false;
-    removeGlobalEnd();
-    clearZoomTimer();
-
-    const btn = cellRef.current;
-    const pid = pointerIdRef.current;
-    if (btn && pid !== null && btn.hasPointerCapture(pid)) {
-      btn.releasePointerCapture(pid);
-    }
-    pointerIdRef.current = null;
-
-    if (zoomOpenedRef.current) {
-      closeZoom();
-      return;
-    }
-
-    const duration = Date.now() - pressStartRef.current;
-    if (duration > 0 && duration < TAP_MS && n > 1) {
-      goNext();
-    }
-  }, [clearZoomTimer, closeZoom, goNext, n, removeGlobalEnd]);
-
-  const onPointerDown = useCallback(
+  const handlePointerDown = useCallback(
     (e: React.PointerEvent<HTMLButtonElement>) => {
-      if (e.button !== 0 || pressActiveRef.current) return;
-
-      preloadNext();
-      pressActiveRef.current = true;
-      zoomOpenedRef.current = false;
-      pressStartRef.current = Date.now();
-      pointerIdRef.current = e.pointerId;
-      e.currentTarget.setPointerCapture(e.pointerId);
-
-      if (closeTimerRef.current !== null) {
-        clearTimeout(closeTimerRef.current);
-        closeTimerRef.current = null;
-      }
-      clearZoomTimer();
-      setPeek(false);
-      setPeekActive(false);
-
-      removeGlobalEnd();
-      const onGlobalEnd = () => endPress();
-      globalEndRef.current = onGlobalEnd;
-      window.addEventListener("pointerup", onGlobalEnd);
-      window.addEventListener("pointercancel", onGlobalEnd);
-
-      zoomTimerRef.current = setTimeout(() => {
-        if (!pressActiveRef.current) return;
-        zoomOpenedRef.current = true;
-        setPeek(true);
-      }, ZOOM_HOLD_MS);
+      if (e.button !== 0) return;
+      isPointerDownRef.current = true;
+      swipeStartXRef.current = e.clientX;
+      isSwipingRef.current = false;
     },
-    [clearZoomTimer, endPress, preloadNext, removeGlobalEnd],
+    [],
+  );
+
+  const handlePointerMove = useCallback((e: React.PointerEvent<HTMLButtonElement>) => {
+    if (!isPointerDownRef.current) return;
+    const deltaX = Math.abs(e.clientX - swipeStartXRef.current);
+    if (deltaX > SWIPE_THRESHOLD) {
+      isSwipingRef.current = true;
+    }
+  }, []);
+
+  const handlePointerUp = useCallback(
+    (e: React.PointerEvent<HTMLButtonElement>) => {
+      const deltaX = e.clientX - swipeStartXRef.current;
+
+      if (isSwipingRef.current || Math.abs(deltaX) > SWIPE_THRESHOLD) {
+        // Swipe detectado
+        if (deltaX < 0) {
+          goNext();
+        } else {
+          goPrev();
+        }
+      } else {
+        // Clique = zoom toggle
+        toggleZoom();
+      }
+
+      isPointerDownRef.current = false;
+      isSwipingRef.current = false;
+    },
+    [goNext, goPrev, toggleZoom],
+  );
+
+  // Handler para o overlay de zoom (swipe para navegar)
+  const zoomOverlayRef = useRef<HTMLDivElement>(null);
+  const handleZoomPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.button !== 0) return;
+    isPointerDownRef.current = true;
+    swipeStartXRef.current = e.clientX;
+    isSwipingRef.current = false;
+  }, []);
+
+  const handleZoomPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isPointerDownRef.current) return;
+    const deltaX = Math.abs(e.clientX - swipeStartXRef.current);
+    if (deltaX > SWIPE_THRESHOLD) {
+      isSwipingRef.current = true;
+    }
+  }, []);
+
+  const handleZoomPointerUp = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      const deltaX = e.clientX - swipeStartXRef.current;
+
+      if (isSwipingRef.current || Math.abs(deltaX) > SWIPE_THRESHOLD) {
+        // Swipe no zoom = navegar foto
+        if (deltaX < 0) {
+          goNext();
+        } else {
+          goPrev();
+        }
+      } else {
+        // Clique no zoom = fechar
+        setZoomOpen(false);
+      }
+
+      isPointerDownRef.current = false;
+      isSwipingRef.current = false;
+    },
+    [goNext, goPrev],
   );
 
   const current = slides[active]!;
@@ -182,12 +161,15 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
         ref={cellRef}
         type="button"
         className="portfolio-grid__cell card-surface"
-        onPointerDown={onPointerDown}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerLeave={() => { isPointerDownRef.current = false; }}
         onContextMenu={(e) => e.preventDefault()}
         aria-label={
           n > 1
-            ? `${photo.style}: toque rápido para próxima foto, segure 0,6s para ampliar (${active + 1} de ${n})`
-            : `${photo.style}: segure 0,6s para ampliar`
+            ? `${photo.style}: clique para zoom, arraste para passar foto (${active + 1} de ${n})`
+            : `${photo.style}: clique para zoom`
         }
       >
         <div className="portfolio-grid__img-stack" aria-hidden>
@@ -208,15 +190,17 @@ export function PortfolioCarouselCell({ photo, slides }: Props) {
         </div>
       </button>
 
-      {peek &&
+      {zoomOpen &&
         createPortal(
           <div
-            className={cn("portfolio-peek", peekActive && "portfolio-peek--active")}
+            ref={zoomOverlayRef}
+            className="portfolio-peek portfolio-peek--active"
             role="dialog"
             aria-modal="true"
             aria-label={`${photo.style} ampliado`}
-            onPointerUp={closeZoom}
-            onPointerCancel={closeZoom}
+            onPointerDown={handleZoomPointerDown}
+            onPointerMove={handleZoomPointerMove}
+            onPointerUp={handleZoomPointerUp}
           >
             <img
               src={current.image}
