@@ -31,13 +31,20 @@ export function Lightbox({ item, onClose }: Props) {
       if (e.key === "+" || e.key === "=") setZoomIdx((i) => Math.min(i + 1, ZOOM_STEPS.length - 1));
       if (e.key === "-") setZoomIdx((i) => Math.max(i - 1, 0));
     };
+    const preventScroll = (e: TouchEvent) => {
+      if (e.target === document.body || document.body.contains(e.target as Node)) {
+        e.preventDefault();
+      }
+    };
     window.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
     document.body.style.position = "fixed";
     document.body.style.width = "100%";
     document.body.style.top = `-${scrollYRef.current}px`;
+    document.body.addEventListener("touchmove", preventScroll, { passive: false });
     return () => {
       window.removeEventListener("keydown", onKey);
+      document.body.removeEventListener("touchmove", preventScroll);
       document.body.style.overflow = "";
       document.body.style.position = "";
       document.body.style.width = "";
