@@ -151,9 +151,7 @@ export type TripPinTone = "verde" | "confirmado" | "em-breve" | "votacao";
 
 export function tripPinTone(trip: { id: string; status: TripStatus }): TripPinTone {
   if (trip.id === "catalao") return "verde";
-  if (trip.status === "confirmado") return "confirmado";
-  if (trip.status === "votacao") return "votacao";
-  return "em-breve";
+  return "confirmado";
 }
 
 export type UpcomingTrip = {
@@ -180,26 +178,6 @@ export const UPCOMING_TRIPS: UpcomingTrip[] = [
     ...mapPin("catalao"),
   },
   {
-    id: "sp",
-    city: "São Paulo",
-    state: "SP",
-    startDate: "2026-05-25",
-    endDate: "2026-05-29",
-    period: "25/05 a 29/05",
-    status: "confirmado",
-    ...mapPin("sp"),
-  },
-  {
-    id: "rj",
-    city: "Rio de Janeiro",
-    state: "RJ",
-    startDate: "2026-06-03",
-    endDate: "2026-06-15",
-    period: "03/06 a 15/06",
-    status: "confirmado",
-    ...mapPin("rj"),
-  },
-  {
     id: "uberlandia",
     city: "Uberlândia",
     state: "MG",
@@ -222,6 +200,22 @@ export const UPCOMING_TRIPS: UpcomingTrip[] = [
     period: "",
     status: "em breve",
     ...mapPin("brasilia"),
+  },
+  {
+    id: "sp",
+    city: "São Paulo",
+    state: "SP",
+    period: "",
+    status: "em breve",
+    ...mapPin("sp"),
+  },
+  {
+    id: "rj",
+    city: "Rio de Janeiro",
+    state: "RJ",
+    period: "",
+    status: "em breve",
+    ...mapPin("rj"),
   },
 ];
 
@@ -252,7 +246,7 @@ export const TESTIMONIALS = [
 
 export const TICKER_PHRASES = [
   "Manel Tattoo",
-  "Semanas em cidades do Brasil",
+  "Atendimento em todo Brasil",
   "Chama no Instagram",
   "Old School · Blackwork · Realismo · Fineline · Lettering",
   "@maneltattoo_",

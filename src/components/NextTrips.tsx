@@ -7,7 +7,7 @@ export function NextTrips() {
   return (
     <section id="proximas-viagens" className="section-panel py-16 md:py-20 section-enter">
       <div className="mx-auto max-w-6xl px-5">
-        <SectionHeading line1="Próximas" line2="Viagens" layout="inline" className="mb-8" />
+        <SectionHeading line1="Atendimento" line2="no Brasil" layout="inline" className="mb-8" />
 
         <div className="trips-stack">
           <BrazilTripMap trips={UPCOMING_TRIPS} />
